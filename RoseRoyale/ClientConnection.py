@@ -5,9 +5,16 @@ import socket
 class ClientConnection:
     def __init__(self, username):
         self.username = username
+        print("Client connection starting...")
         
     def connect(self, IP):
-        self.conectionIP = IP
+        connection = socket.socket()
+        connection.connect((IP, 2396))
+        self.connectionManager = ConnectionManager(connection)
+        self.connectionManager.start()
+        
+    def sendMessage(self, message):
+        self.connectionManager.sendMessage(message)
 
 class ConnectionManager:
     def __init__(self, connection):
@@ -55,9 +62,10 @@ class ServerWriter(Thread):
         print("Client writer created")
         
     def run(self):
-        while self.theHandler.shouldRun:
+        while self.manager.shouldRun:
             if len(self.messages) > 0:
                 print("Writing message: " + self.messages[0])
+                self.connection.sendall(self.messages[0].encode("utf-8"))
                 del self.messages[0]
             time.sleep(0.001)
                 

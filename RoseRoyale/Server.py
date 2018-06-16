@@ -26,15 +26,24 @@ class Server:
             client.close()
         
     def ConnectionListener(self):
+        print("connection listener started")
         serverSocket = socket.socket()
-        serverSocket.bind((socket.gethostname(), 2396))
+        print("socket created")
+        serverSocket.bind(("127.0.0.1", 2396))
+        print("socket bound")
         serverSocket.listen(5)
+        print("socket listening")
         
         while self.shouldRun:
-            clientConnection = serverSocket.accept()
+            print("waiting for clients")
+            clientConnection, addressInfo = serverSocket.accept()
+            print("connection requested")
             cHandler = ClientHandler(self, clientConnection)
+            print("created client handler")
             cHandler.start()
+            print("started client handler")
             self.clients.append(cHandler)
+            print("added client handler to client list")
             
     def close(self):
         self.shouldRun = False
@@ -70,7 +79,15 @@ class ClientListener(Thread):
         print("Client listener created")
         
     def run(self):
-        self.connection.read(2048)
+        buffer = ''
+        while self.theHandler.shouldRun:
+            received = self.connection.recv(2048)
+            buffer += received.decode('utf-8')
+            if buffer != '':
+                self.receivedMessages.append(buffer[0:buffer.find("!end")])
+            time.sleep(0.001)
+                
+        
     
     def getMessages(self):
         messages = self.receivedMessages.copy()
