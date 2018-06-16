@@ -1,8 +1,7 @@
-# import the pygame module, so you can use it
 import pygame
 from RoseRoyale.Player import Player
  
-# define a main function
+
 def main():
     
     pygame.init()
@@ -13,16 +12,34 @@ def main():
     clock = pygame.time.Clock()
     tempBack = pygame.image.load("tempBack.png").convert()
     win.blit(tempBack, (0, 0))
-    player = Player(126, 770, "gun", win)
+    
+    floor = pygame.Rect(0, 834, 1024, 192)
+    plat1 = pygame.Rect(194, 384, 320, 64)
+    plat2 = pygame.Rect(194, 576, 320, 64)
+    
+    
+    terrain = [floor, plat1, plat2]
+    
+    
+    
+    player = Player(126, 770, "gun", win, terrain)
     
     running = True
-    # create a surface on screen that has the size of 240 x 180
+
+    
     
     posx = 0
     posy = 0
     # main loop
     while running:
+        if posx > 0:
+            posx = 0
+            
+        if posx < 0:
+            posx = 0
         
+        #if posy < 4:
+        #    posy += 4
         
         for event in pygame.event.get():
             
@@ -31,26 +48,20 @@ def main():
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    posx -= 4
+                    posx = -4
                     
                 if event.key == pygame.K_d:
-                    posx += 4
-                    
-                if event.key == pygame.K_s:
-                    posy += 4
-                    
-                if event.key == pygame.K_w:
-                    posy -= 4
+                    posx = 4
                     
                 if event.key == pygame.K_SPACE:
-                    player.getWeapon().shoot()
+                    posy = -16
                     
         
         
         if (posx != 0 or posy != 0):
             win.blit(tempBack, (0, 0))
-            player.move(posx, posy)
-            #print("jeff")
+            player.move(posx, posy, terrain)
+            
         
         pygame.display.update()
         clock.tick(60)
@@ -58,8 +69,7 @@ def main():
     
             
                 
-# run the main function only if this module is executed as the main script
-# (if you import this as a module then nothing is executed)
+
 if __name__== "__main__":
-    # call the main function
+
     main()
