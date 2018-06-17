@@ -1,6 +1,7 @@
 import pygame
 from RoseRoyale.Player import Player
- 
+from RoseRoyale.Gun import Gun
+from RoseRoyale.Bullet import Bullet
 
 def main():
     
@@ -11,7 +12,7 @@ def main():
     pygame.key.set_repeat(1,0)
     clock = pygame.time.Clock()
     tempBack = pygame.image.load("tempBack.png").convert()
-    win.blit(tempBack, (0, 0))
+
     
     floor = pygame.Rect(0, 834, 1024, 192)
     plat1 = pygame.Rect(194, 384, 320, 64)
@@ -19,10 +20,12 @@ def main():
     
     
     terrain = [floor, plat1, plat2]
-    
+    backgroundX = 0
     
     
     player = Player(126, 770, "gun", win, terrain)
+    pistol = Gun(126, 770, win, terrain)
+    
     
     running = True
 
@@ -59,10 +62,17 @@ def main():
                     
                 if event.key == pygame.K_SPACE and player.onGround:
                     posy = -32
-                    
+                
+                if event.key == pygame.K_t:
+                    pass
+        
+        backgroundX = backgroundX - posx           
         if (posx != 0 or posy != 0):
-            win.blit(tempBack, (0, 0))
+            win.blit(tempBack, (backgroundX, 0))
             player.move(posx, posy, terrain)
+            pistol.drawGun(player.posx + 51, player.posy + 10)
+            pistol.shoot()
+            
             
         
         pygame.display.update()
