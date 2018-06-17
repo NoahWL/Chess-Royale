@@ -8,11 +8,9 @@ class Player:
         
         self.posx = posx
         self.posy = posy
-        
         self.weapon = weapon
-        
         self.living = True
-
+        self.onGround = False
         self.win = win
         self.pPlayer = pygame.image.load("tempPlayer.png").convert()
         self.hitbox = pygame.Rect(posx, posy, 64, 64)
@@ -27,6 +25,7 @@ class Player:
         return False
     
     def move(self, dx, dy, terrain):
+        self.onGround = False
         # Process movement and collisions in x-axis
         if dx > 0:
             while dx > 0:
@@ -50,6 +49,7 @@ class Player:
                 dy = dy - 1
                 if self.checkTerrain(terrain):
                     self.hitbox.y = self.hitbox.y - 1
+                    self.onGround = True
                     break
         elif dy < 0:
             while dy < 0:

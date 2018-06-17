@@ -30,10 +30,20 @@ def main():
     
     posx = 0
     posy = 0
+    
     # main loop
     while running:
-        posx = 0
-        posy = 4
+        if posx > 0:
+            posx = posx - 1
+        elif posx < 0:
+            posx = posx + 1
+        
+        if posy < 28:
+            posy = posy + 2
+        elif posy > 4:
+            posy = posy - 4
+        elif posy < 4:
+            posy = posy + 16
         
         for event in pygame.event.get():
             
@@ -47,11 +57,9 @@ def main():
                 if event.key == pygame.K_d:
                     posx = 2
                     
-                if event.key == pygame.K_SPACE:
-                    posy = -2
+                if event.key == pygame.K_SPACE and player.onGround:
+                    posy = -32
                     
-        
-        
         if (posx != 0 or posy != 0):
             win.blit(tempBack, (0, 0))
             player.move(posx, posy, terrain)
