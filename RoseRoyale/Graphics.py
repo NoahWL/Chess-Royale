@@ -32,14 +32,8 @@ def main():
     posy = 0
     # main loop
     while running:
-        if posx > 0:
-            posx = 0
-            
-        if posx < 0:
-            posx = 0
-        
-        #if posy < 4:
-        #    posy += 4
+        posx = 0
+        posy = 4
         
         for event in pygame.event.get():
             
@@ -48,13 +42,13 @@ def main():
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    posx = -4
+                    posx = -2
                     
                 if event.key == pygame.K_d:
-                    posx = 4
+                    posx = 2
                     
                 if event.key == pygame.K_SPACE:
-                    posy = -16
+                    posy = -2
                     
         
         

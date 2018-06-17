@@ -18,49 +18,51 @@ class Player:
         self.hitbox = pygame.Rect(posx, posy, 64, 64)
         win.blit(self.pPlayer, (self.posx, self.posy))
         
-        print("created player")
         
-        
-        
+    def checkTerrain(self, terrain):
+        for t in terrain:
+            if self.hitbox.colliderect(t):
+                print('COLLIDE')
+                return True
+        return False
     
-    def move(self, posx, posy, terrain):       
-        
-        newx = 0
-        breakout = False
-        for t in terrain:
-            if breakout:
-                break
-            
-            for i in range(posx):
-                newx = self.posx + i
-                self.hitbox.x = newx
-                
-                if self.hitbox.colliderect(t):
-                    newx -= 1
-                    breakout = True
-                    print("collide x")
+    def move(self, dx, dy, terrain):
+        # Process movement and collisions in x-axis
+        if dx > 0:
+            while dx > 0:
+                self.hitbox.x = self.hitbox.x + 1
+                dx = dx - 1
+                if self.checkTerrain(terrain):
+                    self.hitbox.x = self.hitbox.x - 1
+                    break
+        elif dx < 0:
+            while dx < 0:
+                self.hitbox.x = self.hitbox.x - 1
+                dx = dx + 1
+                if self.checkTerrain(terrain):
+                    self.hitbox.x = self.hitbox.x + 1
                     break
                 
-        newy = 0
-        breakout = False
-        for t in terrain:
-            if breakout:
-                break
-            
-            for i in range(posy):
-                newy = self.posy + i
-                self.hitbox.y = newy
-                
-                if self.hitbox.colliderect(t):
-                    newy -= 1
-                    breakout = True
-                    print("collide x")
+        # Process movement and collisions in y-axis
+        if dy > 0:
+            while dy > 0:
+                self.hitbox.y = self.hitbox.y + 1
+                dy = dy - 1
+                if self.checkTerrain(terrain):
+                    self.hitbox.y = self.hitbox.y - 1
+                    break
+        elif dy < 0:
+            while dy < 0:
+                self.hitbox.y = self.hitbox.y - 1
+                dy = dy + 1
+                if self.checkTerrain(terrain):
+                    self.hitbox.y = self.hitbox.y + 1
                     break
                 
-        self.win.blit(self.pPlayer, (newx, newy))
-        self.posx = newx
-        self.posy = newy
-        
+        self.posx = self.hitbox.x
+        self.posy = self.hitbox.y
+        self.win.blit(self.pPlayer, (self.posx, self.posy))
+        pygame.draw.rect(self.win, (255, 0, 0), self.hitbox)
     
     def setWeapon(self, weapon):
         if (weapon == "gun"):
