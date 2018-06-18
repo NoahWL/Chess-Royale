@@ -15,6 +15,11 @@ class ClientConnection:
         
     def sendMessage(self, message):
         self.connectionManager.sendMessage(message)
+        
+    def handleMessage(self, message):
+        type = message[0:message.find('!type')]
+        if type == 'updatePos':
+            pass
 
 class ConnectionManager:
     def __init__(self, connection):
@@ -45,7 +50,13 @@ class ServerListener(Thread):
         self.receivedMessages = []
         
     def run(self):
-        self.receivedMessages.append("Test message")
+        buffer = ''
+        while self.manager.shouldRun:
+            received = self.connection.recv(2048)
+            buffer += received.decode('utf-8')
+            if buffer != '':
+                self.receivedMessages.append(buffer[0:buffer.find("!end")])
+            time.sleep(0.001)
     
     def getMessages(self):
         messages = self.receivedMessages.copy()

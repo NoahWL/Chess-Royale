@@ -12,9 +12,6 @@ def Main():
     cc = ClientConnection("testName")
     cc.connect('127.0.0.1')
     time.sleep(1.0)
-    while True:
-        cc.sendMessage("This is a test message! !end")
-        time.sleep(0.1)
 
 if __name__ == "__main__":
     Main()

@@ -87,8 +87,6 @@ class ClientListener(Thread):
                 self.receivedMessages.append(buffer[0:buffer.find("!end")])
             time.sleep(0.001)
                 
-        
-    
     def getMessages(self):
         messages = self.receivedMessages.copy()
         self.receivedMessages.clear()
@@ -107,6 +105,7 @@ class ClientWriter(Thread):
         while self.theHandler.shouldRun:
             if len(self.messages) > 0:
                 print("Writing message: " + self.messages[0])
+                self.connection.sendall(self.messages[0].encode("utf-8"))
                 del self.messages[0]
             time.sleep(0.001)
                 

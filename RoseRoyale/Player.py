@@ -63,6 +63,12 @@ class Player:
         self.posy = self.hitbox.y
         self.win.blit(self.pPlayer, (self.posx, self.posy))
         #pygame.draw.rect(self.win, (255, 0, 0), self.hitbox)
+        
+    def getPosX(self):
+        return self.posx
+    
+    def getPosY(self):
+        return self.posy
     
     def setWeapon(self, weapon):
         if (weapon == "gun"):
