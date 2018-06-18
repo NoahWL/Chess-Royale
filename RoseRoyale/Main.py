@@ -1,17 +1,23 @@
 from RoseRoyale.Server import Server
 from RoseRoyale.ClientConnection import ClientConnection
 from threading import Thread
+import RoseRoyale.Graphics
 import time
 
 def Main():
-    myServer = Server("miserver")
-    serverThread = Thread(target = myServer.initialize, args=())
-    serverThread.start()
-    
-    time.sleep(1.0)
+    setupServer()
+    time.sleep(1) # Temp
+    setupServerConnection()
+    RoseRoyale.Graphics.init() # Start main game loop in this thread
+
+def setupServerConnection():
     cc = ClientConnection("testName")
     cc.connect('127.0.0.1')
-    time.sleep(1.0)
+    
+def setupServer():
+    myServer = Server("miserver") # Create server instance
+    serverThread = Thread(target = myServer.initialize, args=())
+    serverThread.start() # Start server in its own thread
 
 if __name__ == "__main__":
     Main()

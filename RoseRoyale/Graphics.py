@@ -1,9 +1,25 @@
 import pygame
 from RoseRoyale.Player import Player
+from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Gun
 from RoseRoyale.Bullet import Bullet
 
-def main():
+global players
+players = []
+
+def updateMPPlayer(name, x, y):
+    player = None
+    for p in players:
+        if p.name == name:
+            player = p
+    if player == None:
+        player = MPPlayer(name, x, y)
+        players.append(player)
+    else:
+        player.posX = x
+        player.posY = y
+            
+def init():
     
     pygame.init()
     win = pygame.display.set_mode((1024,1024))
@@ -20,7 +36,6 @@ def main():
     
     
     terrain = [floor, plat1, plat2]
-    backgroundX = 0
     
     
     player = Player(126, 770, "gun", win, terrain)
@@ -29,8 +44,6 @@ def main():
     
     running = True
 
-    
-    
     posx = 0
     posy = 0
     
@@ -65,23 +78,20 @@ def main():
                 
                 if event.key == pygame.K_t:
                     pass
-        
-        backgroundX = backgroundX - posx           
+                         
         if (posx != 0 or posy != 0):
-            win.blit(tempBack, (backgroundX, 0))
+            win.blit(tempBack, (0, 0))
             player.move(posx, posy, terrain)
             pistol.drawGun(player.posx + 51, player.posy + 10)
             pistol.shoot()
             
+        for mpplayer in players:
+            mpplayer.draw()
             
         
         pygame.display.update()
         clock.tick(60)
-                        
-    
-            
-                
 
 if __name__== "__main__":
 
-    main()
+    init()

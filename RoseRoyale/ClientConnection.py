@@ -1,4 +1,5 @@
 from threading import Thread
+import RoseRoyale.Graphics as rg
 import time
 import socket
 
@@ -18,11 +19,16 @@ class ClientConnection:
         
     def handleMessage(self, message):
         print('Handling message')
-        type = message[(message.find('!type') + 5) : message.find('!/type')]
+        type = message[message.find('!type') + 5 : message.find('!/type')] # Get message type
         print('Type: ', type)
         
         if type == 'updatePos':
-            playerName = message
+            playerName = message[message.find('!name') + 5 : message.find('!/name')] # Get player name
+            x = message[message.find('!posX') + 5 : message.find('!/posX')]
+            y = message[message.find('!posY') + 5 : message.find('!/posY')]
+            x = int(x)
+            y = int(y)
+            rg.updateMPPlayer(playerName, x, y)
 
 class ConnectionManager:
     def __init__(self, connection):
