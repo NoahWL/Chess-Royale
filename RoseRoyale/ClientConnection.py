@@ -17,9 +17,12 @@ class ClientConnection:
         self.connectionManager.sendMessage(message)
         
     def handleMessage(self, message):
-        type = message[0:message.find('!type')]
+        print('Handling message')
+        type = message[(message.find('!type') + 5) : message.find('!/type')]
+        print('Type: ', type)
+        
         if type == 'updatePos':
-            pass
+            playerName = message
 
 class ConnectionManager:
     def __init__(self, connection):
