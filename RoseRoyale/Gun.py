@@ -1,22 +1,21 @@
 import pygame
 from RoseRoyale.Bullet import Bullet
 
-class Gun:
+
+class Pistol:
     
-    def __init__(self, posx, posy, win, terrain):
-        self.posx = posx
-        self.posy = posy
-        self.win = win
+    def __init__(self, posX, posY, window, terrain):
+        self.posX = posX
+        self.posY = posY
+        self.win = window
         self.pistol = pygame.image.load("pistol.png")
         self.terrain = terrain
-        win.blit(self.pistol, (self.posx, self.posy))
+        window.blit(self.pistol, (self.posX, self.posY))
         
-    def drawGun(self, x, y):
-        self.posx = x
-        self.posy = y
+    def draw(self, x, y):
+        self.posX = x
+        self.posY = y
         self.win.blit(self.pistol, (x, y))
     
     def shoot(self):
-        
-        return Bullet(self.win, self.terrain, self.posx, self.posy)
-        
+        return Bullet(self.win, self.terrain, self.posX, self.posY)
