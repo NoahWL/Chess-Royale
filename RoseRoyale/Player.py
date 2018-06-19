@@ -1,13 +1,17 @@
 import pygame
 import math
 from RoseRoyale.Gun import Gun
+import RoseRoyale.ClientConnection
+import random
+
 
 class Player:
     
     def __init__(self, posx, posy, weapon, win, terrain):
-        
         self.posx = posx
         self.posy = posy
+        self.serverPosX = posx
+        self.serverPosY = posy
         self.weapon = weapon
         self.living = True
         self.onGround = False
@@ -20,7 +24,6 @@ class Player:
     def checkTerrain(self, terrain):
         for t in terrain:
             if self.hitbox.colliderect(t):
-                print('COLLIDE')
                 return True
         return False
     
@@ -62,6 +65,13 @@ class Player:
         self.posx = self.hitbox.x
         self.posy = self.hitbox.y
         self.win.blit(self.pPlayer, (self.posx, self.posy))
+        
+        totalMovement = self.posx + self.posy
+        totalMovementServer = self.serverPosX + self.serverPosY
+        if abs(totalMovement - totalMovementServer) and RoseRoyale.ClientConnection.theClientConnection != None > 4:
+            RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posx, self.posy) # Send new player position to the server
+            self.serverPosX = self.posx
+            self.serverPosY = self.posy
         #pygame.draw.rect(self.win, (255, 0, 0), self.hitbox)
         
     def getPosX(self):
