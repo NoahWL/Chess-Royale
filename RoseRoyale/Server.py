@@ -2,7 +2,9 @@ from threading import Thread
 import time
 import socket
 
+
 class Server:
+
     def __init__(self, name):
         self.serverName = name
         self.shouldRun = True
@@ -11,12 +13,12 @@ class Server:
     def initialize(self):
         print("Server " + self.serverName + " starting...")
         connectionListenerThread = Thread(target=self.ConnectionListener, args=())
-        connectionListenerThread.start() # Start connection listener in its own thread
+        connectionListenerThread.start()  # Start connection listener in its own thread
         
-        time.sleep(0.5) # Allow connection listener to start
+        time.sleep(0.5)  # Allow connection listener to start
         
-        while self.shouldRun: # Main server loop
-            #print('outer')
+        while self.shouldRun:  # Main server loop
+            # print('outer')
             for client in self.clients:
                 messages = client.read()
                 if messages != None:
@@ -28,10 +30,10 @@ class Server:
             client.close()
             
     def handleMessage(self, message, client):
-        type1 = message[message.find('!type') + 5 : message.find('!/type')] # Get message type
+        type1 = message[message.find('!type') + 5 : message.find('!/type')]  # Get message type
         print('Type:', type1)
         if type1 == 'PLAYERPOSITION':
-            self.sendToAll(message, client.name) # Pass on the player position to all clients
+            self.sendToAll(message, client.name)  # Pass on the player position to all clients
         elif type1 == 'CLIENTNAME':
             client.name = message[message.find('!name') + 5 : message.find('!/name')]
             
@@ -39,7 +41,6 @@ class Server:
         for c in self.clients:
             if c.name != ignore:
                 c.sendMessage(message)
-                
         
     def ConnectionListener(self):
         print("connection listener started")
@@ -65,7 +66,9 @@ class Server:
         for ch in self.clients:
             ch.close()
 
+
 class ClientHandler:
+
     def __init__(self, server, clientConnection):
         Thread.__init__(self)
         self.theServer = server
@@ -92,8 +95,10 @@ class ClientHandler:
     def close(self):
         self.shouldRun = False
         self.connection.close()
+
     
 class ClientListener(Thread):
+
     def __init__(self, handler, connection):
         Thread.__init__(self)
         self.theHandler = handler
@@ -103,17 +108,19 @@ class ClientListener(Thread):
         
     def run(self):
         while self.theHandler.shouldRun:
-            buffer = '' # TODO: Implement the buffer correctly
-            #print('clientlistener')
+            buffer = ''  # TODO: Implement the buffer correctly
+            # print('clientlistener')
             received = self.connection.recv(2048)
             buffer += received.decode('utf-8')
             if buffer != '':
                 self.receivedMessages.append(buffer[0:buffer.find("!end")])
-                #print('b', buffer[0:buffer.find("!end")])
-                #print('b2', buffer)
+                # print('b', buffer[0:buffer.find("!end")])
+                # print('b2', buffer)
             time.sleep(0.001)
+
         
 class ClientWriter(Thread):
+
     def __init__(self, handler, connection):
         Thread.__init__(self)
         self.theHandler = handler
@@ -124,9 +131,9 @@ class ClientWriter(Thread):
         
     def run(self):
         while self.theHandler.shouldRun:
-            #print('clientwriter')
+            # print('clientwriter')
             if len(self.messages) > 0:
-                #print("Writing message: " + self.messages[0])
+                # print("Writing message: " + self.messages[0])
                 self.connection.sendall(self.messages[0].encode("utf-8"))
                 del self.messages[0]
             time.sleep(0.001)

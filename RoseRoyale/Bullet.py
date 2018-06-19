@@ -24,9 +24,3 @@ class Bullet:
             return True
         else:
             return False
-            
-            
-        
-            
-           
-    

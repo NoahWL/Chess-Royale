@@ -42,6 +42,7 @@ def initialize():
     
     # main loop
     while shouldRun:
+        # Manage local player physics and controls
         if posx > 0:
             posx = posx - 1
         elif posx < 0:
@@ -95,9 +96,6 @@ def initialize():
     # Runs on window close
     pygame.display.quit()
     pygame.quit()
-
-def calcPlayerPosition():
-    pass
 
 def updateMPPlayer(name, x, y):
     player = None

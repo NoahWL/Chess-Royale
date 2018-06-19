@@ -6,10 +6,12 @@ import socket
 global theClientConnection
 theClientConnection = None
 
+
 class ClientConnection:
+
     def __init__(self, username):
         global theClientConnection
-        theClientConnection = self # Singleton
+        theClientConnection = self  # Singleton
         self.username = username
         self.shouldRun = True
         print("Client connection starting...")
@@ -21,28 +23,28 @@ class ClientConnection:
         self.connectionManager = ConnectionManager(connection, self.username)
         self.connectionManager.start()
         
-        while self.shouldRun: # Main server connection loop
+        while self.shouldRun:  # Main server connection loop
             messages = self.connectionManager.read()
             if messages != None:
                 for message in messages:
-                    #print("Message from server:" + message)
+                    # print("Message from server:" + message)
                     self.handleMessage(message)
             time.sleep(0.001)
     
     def sendPlayerPos(self, x, y):
         message = '!typePLAYERPOSITION!/type !name' + self.username + '!/name !posX' + str(x) + '!/posX !posY' + str(y) + '!/posY !end'
-        #print(message)
+        # print(message)
         self._sendMessage(message)
     
     def _sendMessage(self, message):
         self.connectionManager.sendMessage(message)
         
     def handleMessage(self, message):
-        #print('handling:', message)
-        type = message[message.find('!type') + 5 : message.find('!/type')] # Get message type
+        # print('handling:', message)
+        type = message[message.find('!type') + 5 : message.find('!/type')]  # Get message type
         
         if type == 'PLAYERPOSITION':
-            playerName = message[message.find('!name') + 5 : message.find('!/name')] # Get player name
+            playerName = message[message.find('!name') + 5 : message.find('!/name')]  # Get player name
             x = message[message.find('!posX') + 5 : message.find('!/posX')]
             y = message[message.find('!posY') + 5 : message.find('!/posY')]
             x = int(x)
@@ -54,7 +56,9 @@ class ClientConnection:
         self.shouldRun = False
         self.connectionManager.close()
 
+
 class ConnectionManager:
+
     def __init__(self, connection, name):
         Thread.__init__(self)
         self.connection = connection
@@ -76,8 +80,10 @@ class ConnectionManager:
     def close(self):
         self.shouldRun = False
         self.connection.close()
+
     
 class ServerListener(Thread):
+
     def __init__(self, manager, connection):
         Thread.__init__(self)
         self.manager = manager
@@ -87,7 +93,7 @@ class ServerListener(Thread):
     def run(self):
         while self.manager.shouldRun:
             buffer = ''
-            #print('serverlistener')
+            # print('serverlistener')
             received = self.connection.recv(2048)
             buffer += received.decode('utf-8')
             if buffer != '':
@@ -98,8 +104,10 @@ class ServerListener(Thread):
         messages = self.receivedMessages.copy()
         self.receivedMessages.clear()
         return messages
+
         
 class ServerWriter(Thread):
+
     def __init__(self, manager, connection):
         Thread.__init__(self)
         self.manager = manager
@@ -113,9 +121,9 @@ class ServerWriter(Thread):
         self.connection.sendall(nameInfo.encode("utf-8"))
         print('Sent client name')
         while self.manager.shouldRun:
-            #print('serverwriter')
+            # print('serverwriter')
             if len(self.messages) > 0:
-                #print("Writing message: " + self.messages[0])
+                # print("Writing message: " + self.messages[0])
                 self.connection.sendall(self.messages[0].encode("utf-8"))
                 del self.messages[0]
             time.sleep(0.001)

@@ -1,14 +1,14 @@
 import pygame
 
 class MPPlayer:
-    def __init__(self, name, posx, posy, window):
+    def __init__(self, name, posX, posY, window):
         self.name = name
-        self.posx = posx
-        self.posy = posy
+        self.posX = posX
+        self.posY = posY
         self.win = window
-        self.pPlayer = pygame.rect.Rect(posx, posy, 60, 60)
+        self.pPlayer = pygame.rect.Rect(posX, posY, 60, 60)
         
     def draw(self):
-        self.pPlayer.x = self.posx
-        self.pPlayer.y = self.posy
+        self.pPlayer.x = self.posX
+        self.pPlayer.y = self.posY
         pygame.draw.rect(self.win, (255, 0, 0), self.pPlayer)

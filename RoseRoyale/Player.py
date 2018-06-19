@@ -4,18 +4,17 @@ from RoseRoyale.Gun import Pistol
 import RoseRoyale.ClientConnection
 import random
 
-
 class Player:
     
-    def __init__(self, posx, posy, weapon, window, terrain):
+    def __init__(self, posX, posY, weapon, window, terrain):
         self.win = window
         self.pPlayer = pygame.image.load("tempPlayer.png").convert()
-        self.hitbox = pygame.Rect(posx, posy, 64, 64)
-        window.blit(self.pPlayer, (posx, posy))
+        self.hitbox = pygame.Rect(posX, posY, 64, 64)
+        window.blit(self.pPlayer, (posX, posY))
         
         self.terrainList = terrain
-        self.posx = posx
-        self.posy = posy
+        self.posX = posX
+        self.posY = posY
         self.serverPosX = 0
         self.serverPosY = 0
         
@@ -66,24 +65,24 @@ class Player:
                     self.hitbox.y = self.hitbox.y + 1
                     break
                 
-        self.posx = self.hitbox.x
-        self.posy = self.hitbox.y
-        self.win.blit(self.pPlayer, (self.posx, self.posy))
-        self.weapon.draw(self.posx + 51, self.posy + 12)
+        self.posX = self.hitbox.x
+        self.posY = self.hitbox.y
+        self.win.blit(self.pPlayer, (self.posX, self.posY))
+        self.weapon.draw(self.posX + 51, self.posY + 12)
         
-        totalMovement = self.posx + self.posy
+        totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
         if abs(totalMovement - totalMovementServer) > 4 and RoseRoyale.ClientConnection.theClientConnection != None:
-            RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posx, self.posy)  # Send new player position to the server
-            self.serverPosX = self.posx
-            self.serverPosY = self.posy
+            RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY)  # Send new player position to the server
+            self.serverPosX = self.posX
+            self.serverPosY = self.posY
         # pygame.draw.rect(self.window, (255, 0, 0), self.hitbox)
         
     def getPosX(self):
-        return self.posx
+        return self.posX
     
     def getPosY(self):
-        return self.posy
+        return self.posY
     
     def setWeapon(self, weapon):
         if (weapon == 'Pistol'):

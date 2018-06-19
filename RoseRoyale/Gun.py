@@ -19,4 +19,3 @@ class Pistol:
     
     def shoot(self):
         return Bullet(self.win, self.terrain, self.posX, self.posY)
-        
