@@ -22,6 +22,7 @@ def init():
     pygame.key.set_repeat(1,0)
     clock = pygame.time.Clock()
     tempBack = pygame.image.load("tempBack.png").convert()
+    
 
     
     floor = pygame.Rect(0, 834, 1024, 192)
