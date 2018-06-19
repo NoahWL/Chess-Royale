@@ -1,4 +1,7 @@
 import pygame
+
+import sys
+
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Gun
@@ -6,23 +9,12 @@ from RoseRoyale.Bullet import Bullet
 
 global players
 players = []
-
-def updateMPPlayer(name, x, y):
-    player = None
-    for p in players:
-        if p.name == name:
-            player = p
-    if player == None:
-        player = MPPlayer(name, x, y)
-        players.append(player)
-    else:
-        player.posX = x
-        player.posY = y
             
 def init():
     
     pygame.init()
-    win = pygame.display.set_mode((1024,1024))
+    global win
+    win = pygame.display.set_mode((1024, 1024))
     
     pygame.display.set_caption("minimal program")
     pygame.key.set_repeat(1,0)
@@ -88,10 +80,23 @@ def init():
         for mpplayer in players:
             mpplayer.draw()
             
-        
         pygame.display.update()
         clock.tick(60)
+        
+    # Runs on window close
+    pygame.display.quit()
+    pygame.quit()
 
-if __name__== "__main__":
 
-    init()
+def updateMPPlayer(name, x, y):
+    player = None
+    for p in players:
+        if p.name == name:
+            player = p
+    if player == None:
+        global win
+        player = MPPlayer(name, x, y, win)
+        players.append(player)
+    else:
+        player.posx = x
+        player.posy = y
