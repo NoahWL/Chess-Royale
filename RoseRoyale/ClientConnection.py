@@ -1,5 +1,5 @@
 from threading import Thread
-import RoseRoyale.Graphics as rg
+import RoseRoyale.Game as rg
 import time
 import socket
 

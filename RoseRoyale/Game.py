@@ -1,51 +1,47 @@
 import pygame
 import time
-import sys
 
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
-from RoseRoyale.Gun import Gun
+from RoseRoyale.Gun import Pistol
 from RoseRoyale.Bullet import Bullet
 from pygame.constants import K_a, K_d, K_SPACE, K_t
 
-
-global players
 players = []
-            
-def init():
-    
-    pygame.init()
-    global win
-    win = pygame.display.set_mode((1024, 1024))
-    
-    pygame.display.set_caption("minimal program")
-    pygame.key.set_repeat(1,0)
-    clock = pygame.time.Clock()
-    tempBack = pygame.image.load("tempBack.png").convert()
+window = None
 
+            
+def initialize():
+    shouldRun = True
     
-    floor = pygame.Rect(0, 834, 1024, 192)
+    # Pygame related setup
+    pygame.init()
+    global window
+    window = pygame.display.set_mode((1024, 1024))
+    
+    pygame.display.set_caption('Rose Royale')
+    pygame.key.set_repeat(1, 0)
+    clock = pygame.time.Clock()
+    
+    # Level set up
+    tempBack = pygame.image.load('tempback.png').convert() # Level background image
+    
+    floor = pygame.Rect(0, 834, 1024, 192) # Terrain objects over background (for collisions)
     plat1 = pygame.Rect(194, 384, 320, 64)
     plat2 = pygame.Rect(194, 576, 320, 64)
     
+    terrainList = [floor, plat1, plat2]
     
-    terrain = [floor, plat1, plat2]
-    
-    
-    player = Player(126, 770, "gun", win, terrain)
-    pistol = Gun(126, 770, win, terrain)
-    
-    
-    running = True
+    player = Player(126, 770, 'Pistol', window, terrainList)
 
     posx = 0
     posy = 0
     
-    lastShot =  0
+    lastShot = 0
     bullets = [] 
     
     # main loop
-    while running:
+    while shouldRun:
         if posx > 0:
             posx = posx - 1
         elif posx < 0:
@@ -61,7 +57,7 @@ def init():
         for event in pygame.event.get():
             
             if event.type == pygame.QUIT:
-                running = False
+                shouldRun = False
                 
             keys = pygame.key.get_pressed()
                 
@@ -75,24 +71,23 @@ def init():
                 posy = -32
             
             if keys[K_t]:
-                if time.time() - lastShot > 0.75: # How often the player can shoot in seconds
-                    bullets.append(pistol.shoot())
+                if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
+                    bullets.append(player.getWeapon().shoot())
                     lastShot = time.time()
-
-
-                         
+        
+        # Draw the player if it has moved
         if (posx != 0 or posy != 0):
-            win.blit(tempBack, (0, 0))
-            player.move(posx, posy, terrain)
-            pistol.drawGun(player.posx + 51, player.posy + 10)
+            window.blit(tempBack, (0, 0))
+            player.move(posx, posy, terrainList)
             
+        # Draw remote players
         for mpplayer in players:
             mpplayer.draw()
-            
+        
+        # Draw bullets
         for bullet in bullets:
             if not bullet.drawBullet():
                 bullets.remove(bullet)
-
             
         pygame.display.update()
         clock.tick(60)
@@ -101,6 +96,8 @@ def init():
     pygame.display.quit()
     pygame.quit()
 
+def calcPlayerPosition():
+    pass
 
 def updateMPPlayer(name, x, y):
     player = None
@@ -108,8 +105,8 @@ def updateMPPlayer(name, x, y):
         if p.name == name:
             player = p
     if player == None:
-        global win
-        player = MPPlayer(name, x, y, win)
+        global window
+        player = MPPlayer(name, x, y, window)
         players.append(player)
     else:
         player.posx = x
