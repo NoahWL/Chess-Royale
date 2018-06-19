@@ -6,8 +6,8 @@ from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Gun
 from RoseRoyale.Bullet import Bullet
+from RoseRoyale.Terrain import Terrain
 from pygame.constants import K_a, K_d, K_SPACE, K_t
-
 
 global players
 players = []
