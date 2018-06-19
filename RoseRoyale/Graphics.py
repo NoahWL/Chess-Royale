@@ -1,13 +1,13 @@
 import pygame
 import time
-import sys
+import os
 
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Gun
 from RoseRoyale.Bullet import Bullet
 from RoseRoyale.Terrain import Terrain
-from pygame.constants import K_a, K_d, K_SPACE, K_t
+from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
 
 global players
 players = []
@@ -16,22 +16,18 @@ def init():
     
     pygame.init()
     global win
-    win = pygame.display.set_mode((1024, 1024))
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+    win = pygame.display.set_mode((1920, 1080), pygame.NOFRAME)
     
     pygame.display.set_caption("minimal program")
     pygame.key.set_repeat(1,0)
     clock = pygame.time.Clock()
-    tempBack = pygame.image.load("tempBack.png").convert()
+    tempBack = pygame.image.load("chessBackground.png").convert()
     
-
+    terrainList = Terrain(win)
     
-    floor = pygame.Rect(0, 834, 1024, 192)
-    plat1 = pygame.Rect(194, 384, 320, 64)
-    plat2 = pygame.Rect(194, 576, 320, 64)
-    
-    
-    terrain = [floor, plat1, plat2]
-    
+    terrain = terrainList.terrain
+      
     
     player = Player(126, 770, "gun", win, terrain)
     pistol = Gun(126, 770, win, terrain)
@@ -65,7 +61,10 @@ def init():
                 running = False
                 
             keys = pygame.key.get_pressed()
-                
+            if keys[K_ESCAPE]:
+                pygame.quit()
+                running = False
+            
             if keys[K_a]:
                 posx = -2
                 
@@ -73,7 +72,7 @@ def init():
                 posx = 2
                 
             if keys[K_SPACE] and player.onGround:
-                posy = -32
+                posy = -29
             
             if keys[K_t]:
                 if time.time() - lastShot > 0.75: # How often the player can shoot in seconds
@@ -84,6 +83,7 @@ def init():
                          
         if (posx != 0 or posy != 0):
             win.blit(tempBack, (0, 0))
+            terrainList.draw()
             player.move(posx, posy, terrain)
             pistol.drawGun(player.posx + 51, player.posy + 10)
             
