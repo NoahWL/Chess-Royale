@@ -6,9 +6,9 @@ class Gun:
     def __init__(self, posx, posy, win, terrain):
         self.posx = posx
         self.posy = posy
-        self.bullet = Bullet(win, terrain)
         self.win = win
         self.pistol = pygame.image.load("pistol.png")
+        self.terrain = terrain
         win.blit(self.pistol, (self.posx, self.posy))
         
     def drawGun(self, x, y):
@@ -18,5 +18,5 @@ class Gun:
     
     def shoot(self):
         
-        self.bullet.drawBullet(self.posx, self.posy)
+        return Bullet(self.win, self.terrain, self.posx, self.posy)
         
