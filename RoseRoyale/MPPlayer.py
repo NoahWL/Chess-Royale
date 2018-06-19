@@ -1,6 +1,8 @@
 import pygame
 
+
 class MPPlayer:
+
     def __init__(self, name, posX, posY, window):
         self.name = name
         self.posX = posX
