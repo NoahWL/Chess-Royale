@@ -10,8 +10,8 @@ class Bullet:
         self.win = win
         self.terrain = terrain
         self.bullet = pygame.image.load("bullet.png")
-        self.hitbox = pygame.Rect(self.posx, self.posy, 64, 64)
-        #pygame.draw.rect(win, (0, 0, 0), self.hitbox)
+        self.hitbox = pygame.Rect(self.posx + 15, self.posy + 6, 32, 10)
+        pygame.draw.rect(win, (0, 0, 0), self.hitbox)
         
     def drawBullet(self):
         
@@ -20,6 +20,11 @@ class Bullet:
             
             self.hitbox.x = self.posx
             self.win.blit(self.bullet, (self.posx, self.posy))
+            
+            for t in self.terrain:
+                if self.hitbox.colliderect(t):
+                    return False
+            
             
             return True
         else:
