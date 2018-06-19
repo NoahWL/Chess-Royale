@@ -1,8 +1,6 @@
 import pygame
-import math
 from RoseRoyale.Gun import Pistol
 import RoseRoyale.ClientConnection
-import random
 
 class Player:
     
