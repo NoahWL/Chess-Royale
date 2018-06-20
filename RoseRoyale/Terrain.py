@@ -1,5 +1,6 @@
 import pygame
 
+
 class Terrain:
     
     def __init__(self, win):
@@ -16,6 +17,5 @@ class Terrain:
         grassPlatform = pygame.image.load("grassPlatform.png").convert_alpha(self.win)
         
         self.win.blit(grassPlatform, (170, 880))
-        
         
     

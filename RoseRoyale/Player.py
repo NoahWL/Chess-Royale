@@ -2,6 +2,7 @@ import pygame
 from RoseRoyale.Gun import Pistol
 import RoseRoyale.ClientConnection
 
+
 class Player:
     
     def __init__(self, posX, posY, weapon, window, terrain):

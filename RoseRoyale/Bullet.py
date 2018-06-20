@@ -1,5 +1,6 @@
 import pygame
 
+
 class Bullet:
     
     def __init__(self, window, terrain, posX, posY):
@@ -13,7 +14,7 @@ class Bullet:
         self.hitbox = pygame.Rect(self.posx + 15, self.posy + 6, 32, 10)
         pygame.draw.rect(window, (0, 0, 0), self.hitbox)
         self.hitbox = pygame.Rect(self.posX, self.posY, 64, 64)
-        #pygame.draw.rect(window, (0, 0, 0), self.hitbox)
+        # pygame.draw.rect(window, (0, 0, 0), self.hitbox)
         
     def drawBullet(self):
         

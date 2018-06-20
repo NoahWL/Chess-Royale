@@ -110,6 +110,7 @@ def initialize():
     pygame.display.quit()
     pygame.quit()
 
+
 def updateMPPlayer(name, x, y):
     player = None
     for p in players:
