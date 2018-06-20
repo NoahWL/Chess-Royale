@@ -2,6 +2,7 @@ import pygame
 import time
 
 import os
+from win32api import GetSystemMetrics
 
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
@@ -14,6 +15,11 @@ from pygame.constants import K_a, K_d, K_SPACE, K_t
 players = []
 window = None
 
+# Variables for resolution scaling.  Game is designed around 1920x1080 but objects and their positions will scale to available space.
+windowScaleX = 0
+windowScaleY = 0
+windowScale = 1
+
             
 def initialize():
     shouldRun = True
@@ -21,9 +27,7 @@ def initialize():
     # Pygame related setup
     pygame.init()
     
-    global window
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
-    window = pygame.display.set_mode((1920, 1080), pygame.NOFRAME)
+    _setupDisplay()
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
@@ -37,7 +41,7 @@ def initialize():
     
     # Level set up
     
-    player = Player(126, 770, 'Pistol', window, terrainList)
+    player = Player(600, 50, 'Pistol', window, terrainList)
 
     posx = 0
     posy = 0
@@ -123,3 +127,19 @@ def updateMPPlayer(name, x, y):
     else:
         player.posx = x
         player.posy = y
+
+
+def _setupDisplay():
+    global window
+    global windowScaleX
+    global windowScaleY
+    screenWidth = GetSystemMetrics(0)
+    screenHeight = GetSystemMetrics(1)
+    
+    windowScaleX = screenWidth / 1920
+    windowScaleY = screenHeight / 1080
+    print(windowScaleX, windowScaleY)
+    
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+    window = pygame.display.set_mode((screenWidth, screenHeight), pygame.NOFRAME)
+    
