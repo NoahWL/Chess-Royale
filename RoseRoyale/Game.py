@@ -35,6 +35,7 @@ def initialize():
     clock = pygame.time.Clock()
     
     tempBack = pygame.image.load("chessBackground.png").convert()
+    tempBack = pygame.transform.scale(tempBack, (int(1920 * windowScaleX), int(1080 * windowScaleY)))
     
     terrain = Terrain(window)
     
