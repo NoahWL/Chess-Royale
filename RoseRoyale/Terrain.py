@@ -7,9 +7,9 @@ class Terrain:
         self.win = win
         
         self.grassPlatform = pygame.image.load("grassPlatform.png").convert_alpha(self.win)
-        self.grassFloor = pygame.image.load("grassFloor.png").convert_alpha(self.win)
+        self.floor = pygame.image.load("floorTile.png").convert_alpha(self.win)
         
-        floor = pygame.Rect(0, 1080, 1920, 192)
+        floor = pygame.Rect(0, 1070, 1920, 10)
         plat1 = pygame.Rect(180, 880, 443, 80)
         plat2 = pygame.Rect(600, 660, 443, 80)
         plat3 = pygame.Rect(1000, 660, 443, 80)
@@ -26,6 +26,8 @@ class Terrain:
    
        
         #floor
-        self.win.blit(self.grassFloor, (0, 1062))
-        self.win.blit(self.grassFloor, (231, 1062))
+        
+        for i in range(102):
+            self.win.blit(self.floor, (0 + 21*i, 1070))
+        
         
