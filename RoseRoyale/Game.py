@@ -16,9 +16,10 @@ players = []
 window = None
 
 # Variables for resolution scaling.  Game is designed around 1920x1080 but objects and their positions will scale to available space.
+resolutionX = 1920
+resolutionY = 1080
 windowScaleX = 0
 windowScaleY = 0
-windowScale = 1
 
             
 def initialize():
@@ -131,14 +132,17 @@ def updateMPPlayer(name, x, y):
 
 def _setupDisplay():
     global window
+    global resolutionX
+    global resolutionY
     global windowScaleX
     global windowScaleY
     screenWidth = GetSystemMetrics(0)
     screenHeight = GetSystemMetrics(1)
+    resolutionX = screenWidth
+    resolutionY = screenHeight
     
     windowScaleX = screenWidth / 1920
     windowScaleY = screenHeight / 1080
-    print(windowScaleX, windowScaleY)
     
     os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
     window = pygame.display.set_mode((screenWidth, screenHeight), pygame.NOFRAME)
