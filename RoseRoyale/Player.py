@@ -1,5 +1,6 @@
 import pygame
 from RoseRoyale.Gun import Pistol
+from RoseRoyale.Gun import Shotgun
 import RoseRoyale.ClientConnection
 
 
@@ -85,7 +86,7 @@ class Player:
     
     def setWeapon(self, weapon):
         if (weapon == 'Pistol'):
-            self.weapon = Pistol(126, 770, self.win, self.terrainList)
+            self.weapon = Shotgun(126, 770, self.win, self.terrainList)
             
     def getWeapon(self):
         return self.weapon
