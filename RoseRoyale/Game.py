@@ -1,3 +1,5 @@
+# TODO: ADD DROP
+
 import pygame
 import time
 
