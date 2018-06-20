@@ -7,8 +7,8 @@ class Player:
     
     def __init__(self, posX, posY, weapon, window, terrain):
         self.win = window
-        self.pPlayer = pygame.image.load("tempPlayer.png").convert()
-        self.hitbox = pygame.Rect(posX, posY, 64, 64)
+        self.pPlayer = pygame.image.load("chess piece.png").convert_alpha()
+        self.hitbox = pygame.Rect(posX, posY, 45, 106)
         window.blit(self.pPlayer, (posX, posY))
         
         self.terrainList = terrain
