@@ -7,7 +7,8 @@ from win32api import GetSystemMetrics
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Pistol
-from RoseRoyale.Bullet import Bullet
+from RoseRoyale.Bullet import PistolBullet
+from RoseRoyale.Bullet import ShotgunBullet
 from RoseRoyale.Terrain import Terrain
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
 from pygame.constants import K_a, K_d, K_SPACE, K_t
@@ -88,7 +89,8 @@ def initialize():
             
             if keys[K_t]:
                 if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
-                    bullets.append(player.getWeapon().shoot())
+                    for i in range(3):
+                        bullets.append(player.getWeapon().shoot(i))
                     lastShot = time.time()
         
         if not shouldRun:

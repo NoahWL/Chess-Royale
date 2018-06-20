@@ -31,6 +31,7 @@ class PistolBullet:
         else:
             return False
 
+
 class ShotgunBullet:
     
     def __init__(self, window, terrain, posX, posY, pyState):
@@ -60,7 +61,6 @@ class ShotgunBullet:
         
         if abs(self.startPosX - self.posX) < 1800:
             self.posX += self.speedX
-            
             
             self.hitbox.x = self.posX
             self.win.blit(self.bullet, (self.posX - 10, self.posY + 15))
