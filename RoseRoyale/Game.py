@@ -67,6 +67,7 @@ def initialize():
                 
             keys = pygame.key.get_pressed()
             if keys[K_ESCAPE]:
+                pygame.display.quit()
                 pygame.quit()
                 shouldRun = False
             
@@ -83,6 +84,9 @@ def initialize():
                 if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
                     bullets.append(player.getWeapon().shoot())
                     lastShot = time.time()
+        
+        if not shouldRun:
+            break
         
         # Draw the player if it has moved
         if (posx != 0 or posy != 0):
