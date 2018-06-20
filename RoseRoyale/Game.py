@@ -13,7 +13,7 @@ from RoseRoyale.Bullet import PistolBullet
 from RoseRoyale.Bullet import ShotgunBullet
 from RoseRoyale.Terrain import Terrain
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
-from pygame.constants import K_a, K_d, K_SPACE, K_t
+from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
 
 players = []
 window = None
@@ -46,7 +46,7 @@ def initialize():
     
     # Level set up
     
-    player = Player(600, 50, 'Pistol', window, terrainList)
+    player = Player(600, 50, 'shotgun', window, terrainList)
 
     posx = 0
     posy = 0
@@ -89,11 +89,19 @@ def initialize():
             if keys[K_SPACE] and player.onGround:
                 posy = -29
             
+            if keys[K_e] and player.posX:
+            
             if keys[K_t]:
                 if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
-                    for i in range(3):
-                        bullets.append(player.getWeapon().shoot(i))
-                    lastShot = time.time()
+                    
+                    if player.weaponName == 'shotgun':
+                        for i in range(3):
+                            bullets.append(player.getWeapon().shoot(i))
+                        lastShot = time.time()
+                    
+                    elif player.weaponName == 'pistol':
+                        bullets.append(player.getWeapon().shoot())
+                        lastShot = time.time()
         
         if not shouldRun:
             break

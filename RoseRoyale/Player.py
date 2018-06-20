@@ -17,7 +17,7 @@ class Player:
         self.posY = posY
         self.serverPosX = 0
         self.serverPosY = 0
-        
+        self.weaponName = weapon
         self.living = True
         self.onGround = False
         self.setWeapon(weapon)
@@ -85,8 +85,10 @@ class Player:
         return self.posY
     
     def setWeapon(self, weapon):
-        if (weapon == 'Pistol'):
+        if (weapon == 'shotgun'):
             self.weapon = Shotgun(126, 770, self.win, self.terrainList)
+        if (weapon == 'pistol'):
+            self.weapon = Pistol(126, 770, self.win, self.terrainList)
             
     def getWeapon(self):
         return self.weapon
