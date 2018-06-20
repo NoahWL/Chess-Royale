@@ -12,8 +12,6 @@ class PistolBullet:
         self.terrain = terrain
         self.bullet = pygame.image.load("bullet.png")
         self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)
-        pygame.draw.rect(window, (0, 0, 0), self.hitbox)
-        # pygame.draw.rect(window, (0, 0, 0), self.hitbox)
         
     def drawBullet(self):
         
@@ -44,11 +42,11 @@ class ShotgunBullet:
         self.win = window
         self.terrain = terrain
         self.bullet = pygame.image.load("shotgunBullet.png")
-        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 15, 22, 22)
-        pygame.draw.rect(window, (0, 0, 0), self.hitbox)
-        # pygame.draw.rect(window, (0, 0, 0), self.hitbox)
+        self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         
     def drawBullet(self):
+        
+        
         
         if self.pyState == 0:
             self.posY += self.speedY
@@ -62,7 +60,9 @@ class ShotgunBullet:
         if abs(self.startPosX - self.posX) < 1800:
             self.posX += self.speedX
             
-            self.hitbox.x = self.posX
+            self.hitbox.x = self.posX - 10
+            self.hitbox.y = self.posY + 15
+            
             self.win.blit(self.bullet, (self.posX - 10, self.posY + 15))
             
             for t in self.terrain:
