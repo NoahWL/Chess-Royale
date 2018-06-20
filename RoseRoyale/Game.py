@@ -46,7 +46,7 @@ def initialize():
     
     # Level set up
     
-    player = Player(600, 50, 'shotgun', window, terrainList)
+    player = Player(600, 50, 'pistol', window, terrainList)
 
     posx = 0
     posy = 0
@@ -81,15 +81,18 @@ def initialize():
                 shouldRun = False
             
             if keys[K_a]:
-                posx = -2
+                posx = -6
                 
             if keys[K_d]:
-                posx = 2
+                posx = 6
                 
             if keys[K_SPACE] and player.onGround:
                 posy = -29
             
-            if keys[K_e] and player.posX:
+            if keys[K_e]:
+                if time.time() - lastShot > 0.75:
+                    player.pickup(terrain)
+                    lastShot = time.time()
             
             if keys[K_t]:
                 if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds

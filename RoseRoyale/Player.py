@@ -1,18 +1,19 @@
 import pygame
 from RoseRoyale.Gun import Pistol
 from RoseRoyale.Gun import Shotgun
+from RoseRoyale.Terrain import Terrain
 import RoseRoyale.ClientConnection
 
 
 class Player:
     
-    def __init__(self, posX, posY, weapon, window, terrain):
+    def __init__(self, posX, posY, weapon, window, terrainList):
         self.win = window
         self.pPlayer = pygame.image.load("chess piece.png").convert_alpha()
         self.hitbox = pygame.Rect(posX, posY, 45, 104)
         window.blit(self.pPlayer, (posX, posY))
         
-        self.terrainList = terrain
+        self.terrainList = terrainList
         self.posX = posX
         self.posY = posY
         self.serverPosX = 0
@@ -86,9 +87,17 @@ class Player:
     
     def setWeapon(self, weapon):
         if (weapon == 'shotgun'):
-            self.weapon = Shotgun(126, 770, self.win, self.terrainList)
+            self.weapon = Shotgun(126, 770, self.win, self.terrainList, False)
         if (weapon == 'pistol'):
             self.weapon = Pistol(126, 770, self.win, self.terrainList)
             
     def getWeapon(self):
         return self.weapon
+    
+    def pickup(self, terrain):
+        for weapon in terrain.weapons:
+            if self.hitbox.colliderect(weapon.hitbox):
+                print('Picked up')
+                self.weapon = weapon
+                self.weaponName = weapon.name
+                weapon.onGround = False

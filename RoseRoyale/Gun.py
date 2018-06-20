@@ -6,6 +6,7 @@ from RoseRoyale.Bullet import ShotgunBullet
 class Pistol:
     
     def __init__(self, posX, posY, window, terrain):
+        self.name = 'pistol'
         self.posX = posX
         self.posY = posY
         self.win = window
@@ -23,18 +24,21 @@ class Pistol:
 
 class Shotgun:
 
-    def __init__(self, posX, posY, window, terrain):
+    def __init__(self, posX, posY, window, terrain, onGround):
+        self.name = 'shotgun'
         self.posX = posX
         self.posY = posY
         self.win = window
-        self.shotgun = pygame.image.load("shotgun.png")
+        self.shotgunImage = pygame.image.load("shotgun.png")
+        self.hitbox = pygame.Rect(posX - 25, posY + 18, 60, 24) # Used for pickup.  Does not need to be changed once picked up.
         self.terrain = terrain
-        window.blit(self.shotgun, (self.posX, self.posY))
+        self.onGround = onGround
+        window.blit(self.shotgunImage, (self.posX, self.posY))
     
     def draw(self, x, y):
         self.posX = x
         self.posY = y
-        self.win.blit(self.shotgun, (x - 25, y + 18))
+        self.win.blit(self.shotgunImage, (x - 25, y + 18))
     
     def shoot(self, pyMove):
         return ShotgunBullet(self.win, self.terrain, self.posX, self.posY, pyMove)
