@@ -17,42 +17,40 @@ class Terrain:
         sX = self.scaleX
         sY = self.scaleY
         
-        # platforms
+        # Platforms - Textures
         self.grassPlatform = pygame.image.load("grassPlatform.png").convert_alpha(self.win)
-        self.grassPlatform = pygame.transform.scale(self.grassPlatform, (int(463 * sX), int(100 * sY)))
+        self.grassPlatform = pygame.transform.scale(self.grassPlatform, (int(463 * sX), int(100 * sY))) # Scale image to screen
         
         self.floor = pygame.image.load("floorTile.png").convert_alpha(self.win)
-        self.floor = pygame.transform.scale(self.floor, (int(21 * sX), int(10 * sY)))
+        self.floor = pygame.transform.scale(self.floor, (int(21 * sX), int(10 * sY))) # Scale image to screen
         
-        floor = pygame.Rect(0 * sX, 1070 * sY, 1920 * sX, 10 * sY)
-        plat1 = pygame.Rect(180 * sX, 880 * sY, 443 * sX, 80 * sY)
-        plat2 = pygame.Rect(600 * sX, 660 * sY, 443 * sX, 80 * sY)
-        plat3 = pygame.Rect(1000 * sX, 660 * sY, 443 * sX, 80 * sY)
-        plat4 = pygame.Rect(1400 * sX, 880 * sY, 443 * sX, 80 * sY)
+        # Platforms - Hitboxes
+        floor = pygame.Rect(0, 1070, 1920, 10)
+        plat1 = pygame.Rect(180, 880, 443, 80)
+        plat2 = pygame.Rect(600, 660, 443, 80)
+        plat3 = pygame.Rect(1000, 660, 443, 80)
+        plat4 = pygame.Rect(1400, 880, 443, 80)
         
         self.terrain = [floor, plat1, plat2, plat3, plat4]
         
-        # weapons
+        # List of weapons on ground
         self.weapons = [Shotgun(400, 1099, self.win, self.terrain, True)]
         
     def draw(self):
-        sX = self.scaleX
-        sY = self.scaleY
-        
-        # platforms:
-        self.win.blit(self.grassPlatform, (600 * sX, 660 * sY))
-        self.win.blit(self.grassPlatform, (1000 * sX, 660 * sY))
-        self.win.blit(self.grassPlatform, (1400 * sX, 880 * sY))
-        self.win.blit(self.grassPlatform, (170 * sX, 880 * sY))
+        # Draw platforms
+        self.win.blit(self.grassPlatform, (600, 660))
+        self.win.blit(self.grassPlatform, (1000, 660))
+        self.win.blit(self.grassPlatform, (1400, 880))
+        self.win.blit(self.grassPlatform, (170, 880))
        
-        # floor
+        # Draw floor
         for i in range(102):
-            self.win.blit(self.floor, (int(21 * sX) * i, RoseRoyale.Game.resolutionY - self.floor.get_height()))
+            self.win.blit(self.floor, (21 * i, 1080 - self.floor.get_height()))
         
-        # weapons
+        # Weapons
         for weapon in self.weapons:
             if weapon.onGround:
-                weapon.draw(400, 1099)
-                #pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
+                weapon.draw(weapon.posX, weapon.posY)
+                # pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
             else:
                 self.weapons.remove(weapon)
