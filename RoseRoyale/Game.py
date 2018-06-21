@@ -17,12 +17,13 @@ from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
 
 players = []
 window = None
+mainWin = None
 
 # Variables for resolution scaling.  Game is designed around 1920x1080 but objects and their positions will scale to available space.
 resolutionX = 1920
 resolutionY = 1080
-windowScaleX = 0
-windowScaleY = 0
+windowScaleX = 1
+windowScaleY = 1
 
 bullets = [] 
 
@@ -32,28 +33,30 @@ def initialize():
     # Pygame related setup
     pygame.init()
     
-    _setupDisplay()
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+    global mainWin
+    global window
+    mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME)
+    window = mainWin.copy()
+    mainWin = pygame.display.set_mode((1366, 768), pygame.NOFRAME)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
     clock = pygame.time.Clock()
     
     tempBack = pygame.image.load("chessBackground.png").convert()
-    tempBack = pygame.transform.scale(tempBack, (int(1920 * windowScaleX), int(1080 * windowScaleY)))
     
     terrain = Terrain(window)
     
     terrainList = terrain.terrain
     
     # Level set up
-    
     player = Player(600, 50, 'rpg', window, terrainList)
 
     posx = 0
     posy = 0
     
     lastShot = 0
-    
     
     # main loop
     while shouldRun:
@@ -75,37 +78,37 @@ def initialize():
             if event.type == pygame.QUIT:
                 shouldRun = False
                 
-            keys = pygame.key.get_pressed()
-            if keys[K_ESCAPE]:
-                pygame.display.quit()
-                pygame.quit()
-                shouldRun = False
+        keys = pygame.key.get_pressed()
+        if keys[K_ESCAPE]:
+            pygame.display.quit()
+            pygame.quit()
+            shouldRun = False
+        
+        if keys[K_a]:
+            posx = -6
             
-            if keys[K_a]:
-                posx = -6
-                
-            if keys[K_d]:
-                posx = 6
-                
-            if keys[K_SPACE] and player.onGround:
-                posy = -29
+        if keys[K_d]:
+            posx = 6
             
-            if keys[K_e]:
-                if time.time() - lastShot > 0.75:
-                    player.pickup(terrain)
+        if keys[K_SPACE] and player.onGround:
+            posy = -29
+        
+        if keys[K_e]:
+            if time.time() - lastShot > 0.75:
+                player.pickup(terrain)
+                lastShot = time.time()
+        
+        if keys[K_t]:
+            if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
+                
+                if player.weaponName == 'shotgun':
+                    for i in range(3):
+                        bullets.append(player.getWeapon().shoot(i))
                     lastShot = time.time()
-            
-            if keys[K_t]:
-                if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
-                    
-                    if player.weaponName == 'shotgun':
-                        for i in range(3):
-                            bullets.append(player.getWeapon().shoot(i))
-                        lastShot = time.time()
-                    
-                    else: # player.weaponName == 'pistol':
-                        bullets.append(player.getWeapon().shoot())
-                        lastShot = time.time()
+                
+                else: # player.weaponName == 'pistol':
+                    bullets.append(player.getWeapon().shoot())
+                    lastShot = time.time()
         
         if not shouldRun:
             break
@@ -124,7 +127,8 @@ def initialize():
         for bullet in bullets:
             if not bullet.drawBullet():
                 bullets.remove(bullet)
-            
+        
+        mainWin.blit(pygame.transform.scale(window, (1366, 768)), (0, 0))
         pygame.display.update()
         clock.tick(60)
         
@@ -145,22 +149,6 @@ def updateMPPlayer(name, x, y):
     else:
         player.posx = x
         player.posy = y
-
-
-def _setupDisplay():
-    global window
-    global resolutionX
-    global resolutionY
-    global windowScaleX
-    global windowScaleY
-    screenWidth = GetSystemMetrics(0)
-    screenHeight = GetSystemMetrics(1)
-    resolutionX = screenWidth
-    resolutionY = screenHeight
     
-    windowScaleX = screenWidth / 1920
-    windowScaleY = screenHeight / 1080
     
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
-    window = pygame.display.set_mode((screenWidth, screenHeight), pygame.NOFRAME)
     

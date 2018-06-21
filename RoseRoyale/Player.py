@@ -7,13 +7,12 @@ import RoseRoyale.ClientConnection
 
 class Player:
     
-    def __init__(self, posX, posY, weapon, window, terrainList):
+    def __init__(self, posX, posY, weapon, window, terrainList):        
         self.win = window
+        self.terrainList = terrainList
+        
         self.pPlayer = pygame.image.load("chess piece.png").convert_alpha()
         self.hitbox = pygame.Rect(posX, posY, 45, 104)
-        window.blit(self.pPlayer, (posX, posY))
-        
-        self.terrainList = terrainList
         self.posX = posX
         self.posY = posY
         self.serverPosX = 0
@@ -21,6 +20,7 @@ class Player:
         self.weaponName = weapon
         self.living = True
         self.onGround = False
+        
         self.setWeapon(weapon)
     
     def _checkTerrain(self, terrain):
@@ -68,8 +68,8 @@ class Player:
                 
         self.posX = self.hitbox.x
         self.posY = self.hitbox.y
-        self.win.blit(self.pPlayer, (self.posX, self.posY))
-        self.weapon.draw(self.posX + 51, self.posY + 12)
+        self.win.blit(self.pPlayer, (self.posX, self.posY)) # Draw player position scaled to screen
+        self.weapon.draw(self.posX, self.posY)
         
         totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
@@ -77,7 +77,6 @@ class Player:
             RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY)  # Send new player position to the server
             self.serverPosX = self.posX
             self.serverPosY = self.posY
-        # pygame.draw.rect(self.window, (255, 0, 0), self.hitbox)
         
     def getPosX(self):
         return self.posX

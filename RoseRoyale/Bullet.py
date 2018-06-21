@@ -128,7 +128,7 @@ class RPGBullet:
         self.win = window
         self.terrain = terrain
         self.bullet = pygame.image.load("rpgBullet.png")
-        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 15)
+        self.hitbox = pygame.Rect(self.posX, self.posY + 2, 32, 15)
         self.collided = False
         self.pellets = []
     def drawBullet(self):
@@ -142,17 +142,17 @@ class RPGBullet:
             else:
                 return True
         else:
-            pygame.draw.rect(self.win, (0,0,0), self.hitbox)
+            #pygame.draw.rect(self.win, (0,0,0), self.hitbox)
             if abs(self.startPosX - self.posX) < 2000:
                 self.posX += self.speed
                 
                 self.hitbox.x = self.posX
-                self.win.blit(self.bullet, (self.posX - 10, self.posY + 5))
+                self.win.blit(self.bullet, (self.posX, self.posY))
                 
                 for t in self.terrain:
                     if self.hitbox.colliderect(t):
                         for i in range(15):
-                            pellet = RPGPellets(self.win, self.terrain, self.posX - 15, self.posY - 15)
+                            pellet = RPGPellets(self.win, self.terrain, self.posX - 10, self.posY - 10)
                             self.pellets.append(pellet)
                         self.collided = True
                             
