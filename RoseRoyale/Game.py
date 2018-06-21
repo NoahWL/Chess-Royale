@@ -50,7 +50,7 @@ def initialize():
     terrainList = terrain.terrain
     
     # Level set up
-    player = Player(600, 50, 'smg', window, terrainList)
+    player = Player(600, 50, 'shotgun', window, terrainList)
 
     posx = 0
     posy = 0
@@ -114,7 +114,7 @@ def initialize():
                 bullets.append(player.getWeapon().shoot())
                 lastShot = time.time()
                 
-            elif time.time() - lastShot > 2 and player.weaponName == 'rpg':
+            elif time.time() - lastShot > 0 and player.weaponName == 'rpg':
                 bullets.append(player.getWeapon().shoot())
                 lastShot = time.time()
         

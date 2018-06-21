@@ -89,10 +89,10 @@ class ShotgunBullet:
         if abs(self.startPosX - self.posX) < 1800:
             self.posX += self.speedX
             
-            self.hitbox.x = self.posX - 1000 
-            self.hitbox.y = self.posY + 1500
+            self.hitbox.x = self.posX + 65
+            self.hitbox.y = self.posY + 15
             
-            self.win.blit(self.bullet, (self.posX - 10, self.posY + 15))
+            self.win.blit(self.bullet, (self.posX + 65, self.posY + 15))
             
             for t in self.terrain:
                 if self.hitbox.colliderect(t):

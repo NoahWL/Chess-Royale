@@ -50,7 +50,7 @@ class Shotgun:
         self.posY = posY
         self.win = window
         self.shotgunImage = pygame.image.load("shotgun.png")
-        self.hitbox = pygame.Rect(posX - 25, posY + 18, 60, 24)  # Used for pickup.  Does not need to be changed once picked up.
+        self.hitbox = pygame.Rect(posX - 15, posY + 28, 60, 24)  # Used for pickup.  Does not need to be changed once picked up.
         self.terrain = terrain
         self.onGround = onGround
         window.blit(self.shotgunImage, (self.posX, self.posY))
@@ -58,7 +58,7 @@ class Shotgun:
     def draw(self, x, y):
         self.posX = x
         self.posY = y
-        self.win.blit(self.shotgunImage, (x - 25, y + 18))
+        self.win.blit(self.shotgunImage, (x + 25, y + 28))
     
     def shoot(self, pyMove):
         return ShotgunBullet(self.win, self.terrain, self.posX, self.posY, pyMove)
