@@ -33,7 +33,7 @@ class Terrain:
         self.terrain = [floor, plat1, plat2, plat3, plat4]
         
         # weapons
-        self.weapons = [Shotgun(100, 1065, self.win, self.terrain, True)]
+        self.weapons = [Shotgun(400, 1099, self.win, self.terrain, True)]
         
     def draw(self):
         sX = self.scaleX
@@ -52,7 +52,7 @@ class Terrain:
         # weapons
         for weapon in self.weapons:
             if weapon.onGround:
-                weapon.draw(100, 1065)
-                pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
+                weapon.draw(400, 1099)
+                #pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
             else:
                 self.weapons.remove(weapon)

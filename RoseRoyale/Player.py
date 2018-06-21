@@ -1,5 +1,5 @@
 import pygame
-from RoseRoyale.Gun import Pistol
+from RoseRoyale.Gun import Pistol, RPG
 from RoseRoyale.Gun import Shotgun
 from RoseRoyale.Terrain import Terrain
 import RoseRoyale.ClientConnection
@@ -90,14 +90,14 @@ class Player:
             self.weapon = Shotgun(126, 770, self.win, self.terrainList, False)
         if (weapon == 'pistol'):
             self.weapon = Pistol(126, 770, self.win, self.terrainList)
-            
+        if (weapon == 'rpg'):
+            self.weapon = RPG(126, 770, self.win, self.terrainList)
     def getWeapon(self):
         return self.weapon
     
     def pickup(self, terrain):
         for weapon in terrain.weapons:
             if self.hitbox.colliderect(weapon.hitbox):
-                print('Picked up')
                 self.weapon = weapon
                 self.weaponName = weapon.name
                 weapon.onGround = False

@@ -24,7 +24,8 @@ resolutionY = 1080
 windowScaleX = 0
 windowScaleY = 0
 
-            
+bullets = [] 
+
 def initialize():
     shouldRun = True
     
@@ -46,13 +47,13 @@ def initialize():
     
     # Level set up
     
-    player = Player(600, 50, 'pistol', window, terrainList)
+    player = Player(600, 50, 'rpg', window, terrainList)
 
     posx = 0
     posy = 0
     
     lastShot = 0
-    bullets = [] 
+    
     
     # main loop
     while shouldRun:
@@ -102,7 +103,7 @@ def initialize():
                             bullets.append(player.getWeapon().shoot(i))
                         lastShot = time.time()
                     
-                    elif player.weaponName == 'pistol':
+                    else: # player.weaponName == 'pistol':
                         bullets.append(player.getWeapon().shoot())
                         lastShot = time.time()
         

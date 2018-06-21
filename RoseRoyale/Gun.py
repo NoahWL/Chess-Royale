@@ -1,7 +1,8 @@
 import pygame
-from RoseRoyale.Bullet import PistolBullet
+import RoseRoyale.Game
+from RoseRoyale.Bullet import PistolBullet, RPGBullet
 from RoseRoyale.Bullet import ShotgunBullet
-
+#TODO add rgp with shrapnel
 
 class Pistol:
     
@@ -42,4 +43,25 @@ class Shotgun:
     
     def shoot(self, pyMove):
         return ShotgunBullet(self.win, self.terrain, self.posX, self.posY, pyMove)
+
+class RPG:
+    
+    def __init__(self, posX, posY, window, terrain):
+        self.name = 'rpg'
+        self.posX = posX
+        self.posY = posY
+        self.win = window
+        self.rpg = pygame.image.load("rpg.png")
+        self.terrain = terrain
+        window.blit(self.rpg, (self.posX, self.posY))
+        
+    def draw(self, x, y):
+        self.posX = x
+        self.posY = y
+        self.win.blit(self.rpg, (x - 36, y + 18))
+    
+    def shoot(self):    
+        
+        return RPGBullet(self.win, self.terrain, self.posX, self.posY)
+    
         
