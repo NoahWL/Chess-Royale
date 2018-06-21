@@ -20,8 +20,8 @@ window = None
 mainWin = None
 
 # Variables for resolution scaling.  Game is designed around 1920x1080 but objects and their positions will scale to available space.
-resolutionX = 1920
-resolutionY = 1080
+resolutionX = GetSystemMetrics(0)
+resolutionY = GetSystemMetrics(1)
 windowScaleX = 1
 windowScaleY = 1
 
@@ -38,7 +38,7 @@ def initialize():
     global window
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME)
     window = mainWin.copy()
-    mainWin = pygame.display.set_mode((1366, 768), pygame.NOFRAME)
+    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.NOFRAME)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
@@ -128,7 +128,7 @@ def initialize():
             if not bullet.drawBullet():
                 bullets.remove(bullet)
         
-        mainWin.blit(pygame.transform.scale(window, (1366, 768)), (0, 0))
+        mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))
         pygame.display.update()
         clock.tick(60)
         
