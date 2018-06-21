@@ -1,7 +1,7 @@
 import pygame
 import RoseRoyale.Game
-from RoseRoyale.Bullet import PistolBullet, RPGBullet
-from RoseRoyale.Bullet import ShotgunBullet
+from RoseRoyale.Bullet import PistolBullet, RPGBullet, SMGBullet, ShotgunBullet
+
 
 
 class Pistol:
@@ -23,6 +23,24 @@ class Pistol:
     def shoot(self):
         return PistolBullet(self.win, self.terrain, self.posX, self.posY)
 
+class SMG:
+    
+    def __init__(self, posX, posY, window, terrain):
+        self.name = 'smg'
+        self.posX = posX
+        self.posY = posY
+        self.win = window
+        self.smg = pygame.image.load("smg.png")
+        self.terrain = terrain
+        window.blit(self.smg, (self.posX, self.posY))
+        
+    def draw(self, x, y):
+        self.posX = x
+        self.posY = y
+        self.win.blit(self.smg, (x + 15, y + 25))
+    
+    def shoot(self):
+        return SMGBullet(self.win, self.terrain, self.posX, self.posY)
 
 class Shotgun:
 

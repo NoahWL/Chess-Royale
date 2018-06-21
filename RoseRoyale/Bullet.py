@@ -30,6 +30,34 @@ class PistolBullet:
         else:
             return False
 
+class SMGBullet:
+     
+    def __init__(self, window, terrain, posX, posY):
+        self.startPosX = posX
+        self.posX = posX
+        self.posY = posY
+        self.speed = 10
+        self.win = window
+        self.terrain = terrain
+        self.bullet = pygame.image.load("smgBullet.png")
+        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 20, 20)
+         
+    def drawBullet(self):
+         
+        if abs(self.startPosX - self.posX) < 900:
+            self.posX += self.speed
+             
+            self.hitbox.x = self.posX
+            self.win.blit(self.bullet, (self.posX + 60, self.posY + 20))
+             
+            for t in self.terrain:
+                if self.hitbox.colliderect(t):
+                    return False
+             
+            return True
+        else:
+            return False
+
 
 class ShotgunBullet:
     

@@ -24,6 +24,9 @@ class Terrain:
         self.floor = pygame.image.load("floorTile.png").convert_alpha(self.win)
         self.floor = pygame.transform.scale(self.floor, (int(21 * sX), int(10 * sY))) # Scale image to screen
         
+        self.upsidedownGrass = pygame.image.load("upsidedownGrass.png").convert_alpha(self.win)
+        self.upsidedownGrass = pygame.transform.scale(self.upsidedownGrass, (int(463 * sX), int(100 * sY)))
+        
         # Platforms - Hitboxes
         floor = pygame.Rect(0, 1070, 1920, 10)
         plat1 = pygame.Rect(180, 880, 443, 80)
@@ -42,10 +45,6 @@ class Terrain:
         self.win.blit(self.grassPlatform, (1000, 660))
         self.win.blit(self.grassPlatform, (1400, 880))
         self.win.blit(self.grassPlatform, (170, 880))
-       
-        # Draw floor
-        for i in range(102):
-            self.win.blit(self.floor, (21 * i, 1080 - self.floor.get_height()))
         
         # Weapons
         for weapon in self.weapons:
@@ -54,3 +53,16 @@ class Terrain:
                 # pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
             else:
                 self.weapons.remove(weapon)
+                
+    def drawAfter(self):
+        sX = self.scaleX
+        sY = self.scaleY
+        
+        self.win.blit(self.upsidedownGrass, (750 * sX, 990 * sY))
+        
+        for i in range(102):
+            self.win.blit(self.floor, (int(21 * sX) * i, 1080 - self.floor.get_height()))
+    
+    
+    
+   

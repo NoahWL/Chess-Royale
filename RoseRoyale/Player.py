@@ -1,5 +1,5 @@
 import pygame
-from RoseRoyale.Gun import Pistol, RPG
+from RoseRoyale.Gun import Pistol, RPG, SMG
 from RoseRoyale.Gun import Shotgun
 from RoseRoyale.Terrain import Terrain
 import RoseRoyale.ClientConnection
@@ -91,6 +91,9 @@ class Player:
             self.weapon = Pistol(126, 770, self.win, self.terrainList)
         if (weapon == 'rpg'):
             self.weapon = RPG(126, 770, self.win, self.terrainList)
+        if (weapon == 'smg'):
+            self.weapon = SMG(126, 770, self.win, self.terrainList)
+            
     def getWeapon(self):
         return self.weapon
     

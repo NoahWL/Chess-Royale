@@ -9,8 +9,7 @@ from win32api import GetSystemMetrics
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Pistol
-from RoseRoyale.Bullet import PistolBullet
-from RoseRoyale.Bullet import ShotgunBullet
+from RoseRoyale.Bullet import PistolBullet, RPGPellets, RPGBullet, ShotgunBullet
 from RoseRoyale.Terrain import Terrain
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
@@ -51,14 +50,14 @@ def initialize():
     terrainList = terrain.terrain
     
     # Level set up
-    player = Player(600, 50, 'rpg', window, terrainList)
+    player = Player(600, 50, 'smg', window, terrainList)
 
     posx = 0
     posy = 0
     
     lastShot = 0
+    clickCount = 0
     
-    # main loop
     while shouldRun:
         # Manage local player physics and controls
         if posx > 0:
@@ -98,17 +97,26 @@ def initialize():
                 player.pickup(terrain)
                 lastShot = time.time()
         
-        if keys[K_t]:
-            if time.time() - lastShot > 0.75:  # How often the player can shoot in seconds
-                
-                if player.weaponName == 'shotgun':
-                    for i in range(3):
-                        bullets.append(player.getWeapon().shoot(i))
-                    lastShot = time.time()
-                
-                else: # player.weaponName == 'pistol':
+        click = pygame.mouse.get_pressed()
+            
+        if click[0] == 1:
+            clickCount += 1
+            
+            if time.time() - lastShot > 0.5 and player.weaponName == 'pistol':  # How often the player can shoot in seconds
                     bullets.append(player.getWeapon().shoot())
                     lastShot = time.time()
+            elif time.time() - lastShot > 0.75 and player.weaponName == 'shotgun':
+                for i in range(3):
+                    bullets.append(player.getWeapon().shoot(i))
+                lastShot = time.time()
+
+            elif time.time() - lastShot > 0.15 and player.weaponName == 'smg':
+                bullets.append(player.getWeapon().shoot())
+                lastShot = time.time()
+                
+            elif time.time() - lastShot > 2 and player.weaponName == 'rpg':
+                bullets.append(player.getWeapon().shoot())
+                lastShot = time.time()
         
         if not shouldRun:
             break
@@ -127,6 +135,7 @@ def initialize():
         for bullet in bullets:
             if not bullet.drawBullet():
                 bullets.remove(bullet)
+        terrain.drawAfter()        
         
         mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))
         pygame.display.update()
