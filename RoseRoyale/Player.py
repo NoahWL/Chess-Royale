@@ -90,9 +90,9 @@ class Player:
         if (weapon == 'pistol'):
             self.weapon = Pistol(126, 770, self.win, self.terrainList)
         if (weapon == 'rpg'):
-            self.weapon = RPG(126, 770, self.win, self.terrainList)
+            self.weapon = RPG(126, 770, self.win, self.terrainList, False)
         if (weapon == 'smg'):
-            self.weapon = SMG(126, 770, self.win, self.terrainList)
+            self.weapon = SMG(126, 770, self.win, self.terrainList, False)
             
     def getWeapon(self):
         return self.weapon

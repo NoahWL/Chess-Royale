@@ -20,7 +20,7 @@ class PistolBullet:
             self.posX += self.speed
             
             self.hitbox.x = self.posX
-            self.win.blit(self.bullet, (self.posX - 10, self.posY + 15))
+            self.win.blit(self.bullet, (self.posX + 30, self.posY + 20))
             
             for t in self.terrain:
                 if self.hitbox.colliderect(t):
