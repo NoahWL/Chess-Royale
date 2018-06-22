@@ -24,7 +24,8 @@ resolutionY = GetSystemMetrics(1)
 windowScaleX = 1
 windowScaleY = 1
 
-bullets = [] 
+bullets = [] # List of bullets that need to be drawn, updated, collided with
+
 
 def initialize():
     shouldRun = True
@@ -146,6 +147,9 @@ def initialize():
     pygame.quit()
 
 
+"""Server commands.  These can be called be the ClientConnection instance to update objects on the player's screen."""
+
+
 def updateMPPlayer(name, x, y):
     player = None
     for p in players:
@@ -158,6 +162,11 @@ def updateMPPlayer(name, x, y):
     else:
         player.posx = x
         player.posy = y
+
+        
+def spawnBullet(bulletX, bulletY, bulletType, bulletDirection):
+    bullet = None
     
-    
+    if bulletType == 'PistolBullet':
+        pass
     

@@ -30,12 +30,14 @@ class Server:
             client.close()
             
     def handleMessage(self, message, client):
-        type1 = message[message.find('!type') + 5 : message.find('!/type')]  # Get message type
-        print('Type:', type1)
-        if type1 == 'PLAYERPOSITION':
+        messageType = message[message.find('!type') + 5 : message.find('!/type')]  # Get message type
+        print('Type:', messageType)
+        if messageType == 'PLAYERPOSITION':
             self.sendToAll(message, client.name)  # Pass on the player position to all clients
-        elif type1 == 'CLIENTNAME':
+        elif messageType == 'CLIENTNAME':
             client.name = message[message.find('!name') + 5 : message.find('!/name')]
+        elif messageType == 'SPAWNBULLET':
+            self.sendToAll(message, client.name) # Pass on bullet to all clients
             
     def sendToAll(self, message, ignore):
         for c in self.clients:

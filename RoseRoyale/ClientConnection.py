@@ -31,32 +31,49 @@ class ClientConnection:
                     self.handleMessage(message)
             time.sleep(0.001)
     
-    def sendPlayerPos(self, x, y):
-        message = '!typePLAYERPOSITION!/type !name' + self.username + '!/name !posX' + str(x) + '!/posX !posY' + str(y) + '!/posY !end'
-        # print(message)
-        self._sendMessage(message)
-    
     def _sendMessage(self, message):
         self.connectionManager.sendMessage(message)
         
     def handleMessage(self, message):
         # print('handling:', message)
-        type = message[message.find('!type') + 5 : message.find('!/type')]  # Get message type
+        messageType = message[message.find('!messageType') + 5 : message.find('!/messageType')]  # Get message messageType
         
-        if type == 'PLAYERPOSITION':
+        if messageType == 'PLAYERPOSITION':
             playerName = message[message.find('!name') + 5 : message.find('!/name')]  # Get player name
             x = message[message.find('!posX') + 5 : message.find('!/posX')]
             y = message[message.find('!posY') + 5 : message.find('!/posY')]
             x = int(x)
             y = int(y)
             rg.updateMPPlayer(playerName, x, y)
+        elif messageType == 'SPAWNBULLET':
+            bulletX = int(message[message.find('!posX') + 5 : message.find('!/posX')])
+            bulletY = int(message[message.find('!posY') + 5 : message.find('!/posY')])
+            bulletType = message[message.find('!bulletType') + 11 : message.find('!/bulletType')]
+            bulletDirection = message[message.find('!bulletDirection') + 16 : message.find('!/bulletDirection')]
+            
+            rg.spawnBullet(bulletX, bulletY, bulletType, bulletDirection)
             
     def close(self):
         print('Disconnecting from server')
         self.shouldRun = False
         self.connectionManager.close()
+        
+    """Player action commands:"""
 
+    def sendBullet(self, bulletX, bulletY, bulletType, bulletDirection):
+        bulletX = str(bulletX)
+        bulletY = str(bulletY)
+        bulletDirection = str(bulletDirection)
+        
+        message = '!typeSPAWNBULLET!/type !name' + self.username + '!/name' + '!posX' + bulletX + '!/posX !posY' + bulletY + '!/posY !bulletType' + bulletType + '!/bulletType !bulletDirection' + bulletDirection + '!/bulletDirection !end'
+        self._sendMessage(message)
+        
+    def sendPlayerPos(self, x, y):
+        message = '!typePLAYERPOSITION!/type !name' + self.username + '!/name !posX' + str(x) + '!/posX !posY' + str(y) + '!/posY !end'
+        # print(message)
+        self._sendMessage(message)
 
+        
 class ConnectionManager:
 
     def __init__(self, connection, name):
