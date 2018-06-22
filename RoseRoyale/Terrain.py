@@ -14,18 +14,13 @@ class Terrain:
         self.setup()
         
     def setup(self):
-        sX = self.scaleX
-        sY = self.scaleY
         
         # Platforms - Textures
         self.grassPlatform = pygame.image.load("grassPlatform.png").convert_alpha(self.win)
-        self.grassPlatform = pygame.transform.scale(self.grassPlatform, (int(463 * sX), int(100 * sY))) # Scale image to screen
-        
-        self.floor = pygame.image.load("floorTile.png").convert_alpha(self.win)
-        self.floor = pygame.transform.scale(self.floor, (int(21 * sX), int(10 * sY))) # Scale image to screen
-        
+        self.floor = pygame.image.load("floorTile.png").convert_alpha(self.win)       
         self.upsidedownGrass = pygame.image.load("upsidedownGrass.png").convert_alpha(self.win)
-        self.upsidedownGrass = pygame.transform.scale(self.upsidedownGrass, (int(463 * sX), int(100 * sY)))
+        self.grassPlatformLeftSide = pygame.image.load("grassPlatformLeftSide.png").convert_alpha(self.win)
+        self.grassPlatformRightSide = pygame.image.load("grassPlatformRightSide.png").convert_alpha(self.win)
         
         # Platforms - Hitboxes
         floor = pygame.Rect(0, 1070, 1920, 10)
@@ -33,20 +28,28 @@ class Terrain:
         plat2 = pygame.Rect(600, 660, 443, 80)
         plat3 = pygame.Rect(1000, 660, 443, 80)
         plat4 = pygame.Rect(1400, 880, 443, 80)
+        plat5 = pygame.Rect(1407, 450, 443, 80)
+        plat6 = pygame.Rect(100, 450, 443, 80)
+        wall1 = pygame.Rect(920, 250, 40, 443)
         
-        self.terrain = [floor, plat1, plat2, plat3, plat4]
+        self.terrain = [floor, plat1, plat2, plat3, plat4, plat5, plat6, wall1]
         
         # List of weapons on ground
-        self.weapons = [Shotgun(300, 1020, self.win, self.terrain, True), 
-                        RPG(950, 1020, self.win, self.terrain, True), 
+        self.weapons = [Shotgun(300, 1020, self.win, self.terrain, True), RPG(950, 1020, self.win, self.terrain, True), 
                         SMG(1600, 1020, self.win, self.terrain, True)]
         
     def draw(self):
         # Draw platforms
+        self.win.blit(self.grassPlatformLeftSide, (920, 250))
+        self.win.blit(self.grassPlatformRightSide, (960, 250))
         self.win.blit(self.grassPlatform, (600, 660))
         self.win.blit(self.grassPlatform, (1000, 660))
         self.win.blit(self.grassPlatform, (1400, 880))
         self.win.blit(self.grassPlatform, (170, 880))
+        self.win.blit(self.grassPlatform, (100, 450))
+        self.win.blit(self.grassPlatform, (1407, 450))
+        
+        
         
         # Weapons
         for weapon in self.weapons:
