@@ -18,7 +18,7 @@ class Pistol:
     def draw(self, x, y):
         self.posX = x
         self.posY = y
-        self.win.blit(self.pistol, (x - 36, y + 18))
+        self.win.blit(self.pistol, (x + 15, y + 25))
     
     def shoot(self):
         return PistolBullet(self.win, self.terrain, self.posX, self.posY)

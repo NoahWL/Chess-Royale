@@ -37,7 +37,9 @@ class Terrain:
         self.terrain = [floor, plat1, plat2, plat3, plat4]
         
         # List of weapons on ground
-        self.weapons = [Shotgun(300, 1020, self.win, self.terrain, True), RPG(950, 1020, self.win, self.terrain, True), SMG(1600, 1020, self.win, self.terrain, True)]
+        self.weapons = [Shotgun(300, 1020, self.win, self.terrain, True), 
+                        RPG(950, 1020, self.win, self.terrain, True), 
+                        SMG(1600, 1020, self.win, self.terrain, True)]
         
     def draw(self):
         # Draw platforms
