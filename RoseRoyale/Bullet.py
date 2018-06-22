@@ -121,7 +121,7 @@ class RPGPellets:
         self.bounce = 0
         
     def drawBullet(self):
-        if abs(self.startPosX - self.posX) < 2000:
+        if abs(self.startPosX - self.posX) < 500:
             self.posX += self.speedX
             self.posY += self.speedY
             
