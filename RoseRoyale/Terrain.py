@@ -1,7 +1,7 @@
 import pygame
 
 import RoseRoyale.Game
-from RoseRoyale.Gun import Shotgun
+from RoseRoyale.Gun import Shotgun, RPG, SMG
 
 
 class Terrain:
@@ -37,7 +37,7 @@ class Terrain:
         self.terrain = [floor, plat1, plat2, plat3, plat4]
         
         # List of weapons on ground
-        self.weapons = [Shotgun(400, 1099, self.win, self.terrain, True)]
+        self.weapons = [Shotgun(300, 1020, self.win, self.terrain, True), RPG(950, 1020, self.win, self.terrain, True), SMG(1600, 1020, self.win, self.terrain, True)]
         
     def draw(self):
         # Draw platforms
@@ -50,7 +50,7 @@ class Terrain:
         for weapon in self.weapons:
             if weapon.onGround:
                 weapon.draw(weapon.posX, weapon.posY)
-                # pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
+                #pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
             else:
                 self.weapons.remove(weapon)
                 

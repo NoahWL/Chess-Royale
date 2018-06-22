@@ -25,13 +25,15 @@ class Pistol:
 
 class SMG:
     
-    def __init__(self, posX, posY, window, terrain):
+    def __init__(self, posX, posY, window, terrain, onGround):
         self.name = 'smg'
         self.posX = posX
         self.posY = posY
         self.win = window
         self.smg = pygame.image.load("smg.png")
         self.terrain = terrain
+        self.onGround = onGround
+        self.hitbox = pygame.Rect(posX + 15, posY + 25, 60, 24)
         window.blit(self.smg, (self.posX, self.posY))
         
     def draw(self, x, y):
@@ -66,19 +68,20 @@ class Shotgun:
 
 class RPG:
     
-    def __init__(self, posX, posY, window, terrain):
+    def __init__(self, posX, posY, window, terrain, onGround):
         self.name = 'rpg'
         self.posX = posX
         self.posY = posY
         self.rpg = pygame.image.load("rpg.png")
-        
+        self.onGround = onGround
         self.win = window
         self.terrain = terrain
+        self.hitbox = pygame.Rect(posX, posY + 26, 60, 24)
         
     def draw(self, x, y):
         self.posX = x
-        self.posY = y + 26
-        self.win.blit(self.rpg, (self.posX, self.posY))
+        self.posY = y 
+        self.win.blit(self.rpg, (self.posX, self.posY + 26))
     
     def shoot(self):
         return RPGBullet(self.win, self.terrain, self.posX + 30, self.posY)
