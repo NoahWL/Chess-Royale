@@ -11,7 +11,7 @@ class Pistol:
         self.posX = posX
         self.posY = posY
         self.win = window
-        self.pistolImageR = pygame.image.load("pistol.png")
+        self.pistolImageR = pygame.image.load("pistol.png").convert_alpha()
         self.pistolImageL = pygame.transform.flip(self.pistolImageR, True, False)
         self.terrain = terrain
         
@@ -34,7 +34,7 @@ class SMG:
         self.posX = posX
         self.posY = posY
         self.win = window
-        self.smgImageR = pygame.image.load("smg.png")
+        self.smgImageR = pygame.image.load("smg.png").convert_alpha()
         self.smgImageL = pygame.transform.flip(self.smgImageR, True, False)
         self.terrain = terrain
         self.onGround = onGround
@@ -60,7 +60,7 @@ class Shotgun:
         self.direction = True
         self.posY = posY
         self.win = window
-        self.shotgunImageR = pygame.image.load("shotgun.png")
+        self.shotgunImageR = pygame.image.load("shotgun.png").convert_alpha()
         self.shotgunImageL = pygame.transform.flip(self.shotgunImageR, True, False)
         self.hitbox = pygame.Rect(posX - 15, posY + 28, 60, 24)  # Used for pickup.  Does not need to be changed once picked up.
         self.terrain = terrain
@@ -90,7 +90,7 @@ class RPG:
         self.posX = posX
         self.posY = posY
         self.onGround = onGround
-        self.rpgImageR = pygame.image.load("rpg.png")
+        self.rpgImageR = pygame.image.load("rpg.png").convert_alpha()
         self.rpgImageL = pygame.transform.flip(self.rpgImageR, True, False)
         self.win = window
         self.terrain = terrain

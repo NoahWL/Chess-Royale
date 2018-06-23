@@ -2,6 +2,7 @@ import pygame
 from RoseRoyale.Gun import Pistol, RPG, SMG
 from RoseRoyale.Gun import Shotgun
 from RoseRoyale.Terrain import Terrain
+from RoseRoyale.EndScreen import Win
 import RoseRoyale.ClientConnection
 
 
@@ -106,3 +107,8 @@ class Player:
                 self.weapon = weapon
                 self.weaponName = weapon.name
                 weapon.onGround = False
+    
+    def lived(self):
+        Win.draw(self.win)
+        
+        

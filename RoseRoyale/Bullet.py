@@ -12,7 +12,7 @@ class PistolBullet:
         self.win = window
         self.direction = direction
         self.terrain = terrain
-        self.bulletR = pygame.image.load("bullet.png")
+        self.bulletR = pygame.image.load("bullet.png").convert_alpha()
         self.bulletL = pygame.transform.flip(self.bulletR, True, False)
         self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)
         
@@ -48,7 +48,7 @@ class SMGBullet:
         self.speed = 10
         self.win = window
         self.terrain = terrain
-        self.bullet = pygame.image.load("smgBullet.png")
+        self.bullet = pygame.image.load("smgBullet.png").convert_alpha()
         self.hitbox = pygame.Rect(self.posX + 48, self.posY + 20, 20, 20)
          
     def drawBullet(self):
@@ -89,7 +89,7 @@ class ShotgunBullet:
         self.pyState = pyState
         self.win = window
         self.terrain = terrain
-        self.bullet = pygame.image.load("shotgunBullet.png")
+        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha()
         self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         
     def drawBullet(self):
@@ -138,7 +138,7 @@ class RPGPellets:
             self.speedY = -1
         self.win = window
         self.terrain = terrain
-        self.bullet = pygame.image.load("shotgunBullet.png")
+        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha()
         self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         self.bounce = 0
         
@@ -178,7 +178,7 @@ class RPGBullet:
         self.speed = 10
         self.win = window
         self.terrain = terrain
-        self.rpgBulletR = pygame.image.load("rpgBullet.png")
+        self.rpgBulletR = pygame.image.load("rpgBullet.png").convert_alpha()
         self.rpgBulletL = pygame.transform.flip(self.rpgBulletR, True, False)
         self.hitbox = pygame.Rect(self.posX, self.posY + 2, 32, 15)
         self.collided = False
