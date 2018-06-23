@@ -37,7 +37,7 @@ class Server:
         elif messageType == 'CLIENTNAME':
             client.name = message[message.find('!name') + 5 : message.find('!/name')]
         elif messageType == 'SPAWNBULLET':
-            self.sendToAll(message, client.name) # Pass on bullet to all clients
+            self.sendToAll(message, client.name)  # Pass on bullet to all clients
             
     def sendToAll(self, message, ignore):
         for c in self.clients:

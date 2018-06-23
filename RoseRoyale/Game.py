@@ -9,7 +9,7 @@ from win32api import GetSystemMetrics
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Gun import Pistol
-from RoseRoyale.Bullet import PistolBullet, RPGPellets, RPGBullet, ShotgunBullet
+from RoseRoyale.Bullet import PistolBullet, RPGPellets, RPGBullet, ShotgunBullet, SMGBullet
 from RoseRoyale.Terrain import Terrain
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
@@ -25,30 +25,33 @@ windowScaleX = 1
 windowScaleY = 1
 
 bullets = []  # List of bullets that need to be drawn, updated, collided with
+terrain = None  # Terrain object containing and managing all terrain that must be drawn
+terrainList = None  # List of terrain objects pulled from terrain
 
 
 def initialize():
     shouldRun = True
     
     # Pygame related setup
-    pygame.init()
+    pygame.display.init()
     
     os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
     global mainWin
     global window
+    global terrain
+    global terrainList
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
+    terrain = Terrain(window)
+    terrainList = terrain.terrain
     mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
+    # mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
     clock = pygame.time.Clock()
     
     tempBack = pygame.image.load("chessBackground.jpg").convert()
-    
-    terrain = Terrain(window)
-    
-    terrainList = terrain.terrain
     
     # Level set up
     player = Player(600, 50, 'pistol', window, terrainList)
@@ -83,8 +86,9 @@ def initialize():
                 
         keys = pygame.key.get_pressed()
         if keys[K_ESCAPE]:
+            pygame.quit()
             shouldRun = False
-            break
+            return
         
         if keys[K_a]:
             posx = -6
@@ -137,7 +141,7 @@ def initialize():
         for bullet in bullets:
             if not bullet.drawBullet():
                 bullets.remove(bullet)
-        terrain.drawAfter()        
+        terrain.drawAfter()
         
         mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))
         pygame.display.update()
@@ -151,23 +155,36 @@ def initialize():
 """Server commands.  These can be called be the ClientConnection instance to update objects on the player's screen."""
 
 
-def updateMPPlayer(name, x, y):
+def updateMPPlayer(name, x, y, direction, weaponName):
     player = None
     for p in players:
         if p.name == name:
             player = p
     if player == None:
         global window
-        player = MPPlayer(name, x, y, window)
+        player = MPPlayer(name, x, y, window, weaponName)
         players.append(player)
     else:
-        player.posx = x
-        player.posy = y
+        player.posX = x
+        player.posY = y
+        player.direction = direction
+        if player.weaponName != weaponName:
+            player.setWeapon(weaponName)
 
         
 def spawnBullet(bulletX, bulletY, bulletType, bulletDirection):
     bullet = None
-    
+     
     if bulletType == 'PistolBullet':
-        pass
+        bullet = PistolBullet(window, terrainList, bulletX, bulletY, bulletDirection)
+    elif bulletType == 'SMGBullet':
+        bullet = SMGBullet(window, terrainList, bulletX, bulletY, bulletDirection)
+    elif bulletType == 'RPGBullet':
+        bullet = RPGBullet(window, terrainList, bulletX, bulletY, bulletDirection)
+    elif bulletType == 'ShotgunBullet':
+        bullet = ShotgunBullet(window, terrainList, bulletX, bulletY, 0, bulletDirection)
+        bullets.append(ShotgunBullet(window, terrainList, bulletX, bulletY, 1, bulletDirection))
+        bullets.append(ShotgunBullet(window, terrainList, bulletX, bulletY, 2, bulletDirection))
+         
+    bullets.append(bullet)
     

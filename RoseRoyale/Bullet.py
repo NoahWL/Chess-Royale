@@ -1,5 +1,4 @@
 import pygame
-import RoseRoyale.Game
 import random
 
 class PistolBullet:

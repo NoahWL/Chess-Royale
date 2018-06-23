@@ -1,6 +1,5 @@
 import pygame
-from RoseRoyale.Gun import Pistol, RPG, SMG
-from RoseRoyale.Gun import Shotgun
+from RoseRoyale.Gun import Pistol, RPG, SMG, Shotgun
 from RoseRoyale.Terrain import Terrain
 from RoseRoyale.EndScreen import Win
 import RoseRoyale.ClientConnection
@@ -78,7 +77,7 @@ class Player:
         totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
         if abs(totalMovement - totalMovementServer) > 4 and RoseRoyale.ClientConnection.theClientConnection != None:
-            RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY)  # Send new player position to the server
+            RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY, direction, self.weaponName)  # Send new player position to the server
             self.serverPosX = self.posX
             self.serverPosY = self.posY
         

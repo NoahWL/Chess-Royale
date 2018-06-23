@@ -1,7 +1,7 @@
 import pygame
 import RoseRoyale.Game
+import RoseRoyale.ClientConnection
 from RoseRoyale.Bullet import PistolBullet, RPGBullet, SMGBullet, ShotgunBullet
-
 
 
 class Pistol:
@@ -25,7 +25,10 @@ class Pistol:
             self.win.blit(self.pistolImageL, (x - 30, y + 25))
     
     def shoot(self):
+        if RoseRoyale.ClientConnection.theClientConnection != None:
+            RoseRoyale.ClientConnection.theClientConnection.sendBullet(self.posX, self.posY, 'PistolBullet', self.direction)
         return PistolBullet(self.win, self.terrain, self.posX, self.posY, self.direction)
+
 
 class SMG:
     
@@ -51,6 +54,7 @@ class SMG:
     
     def shoot(self):
         return SMGBullet(self.win, self.terrain, self.posX, self.posY, self.direction)
+
 
 class Shotgun:
 
@@ -111,5 +115,4 @@ class RPG:
         else:
             magicNum = -30
         return RPGBullet(self.win, self.terrain, self.posX + magicNum, self.posY, self.direction)
-    
         

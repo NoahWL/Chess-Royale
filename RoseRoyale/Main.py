@@ -11,8 +11,6 @@ myServer = None
 cc = None
 username = str(random.randint(1, 100))  # Temp - assign a random username
 
-# wif #moving = left, draw left.
-
 
 def Main(runServer):  # Main function, starts the entire game
     if runServer:
@@ -29,7 +27,7 @@ def setupServerConnection():
     connectionThread = Thread(target=cc.connect, args=())
     connectionThread.start()
 
-    
+
 def setupServer(serverName):
     # Create a server instance
     global myServer
