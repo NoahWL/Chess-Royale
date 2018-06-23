@@ -44,7 +44,7 @@ def initialize():
     pygame.key.set_repeat(1, 0)
     clock = pygame.time.Clock()
     
-    tempBack = pygame.image.load("chessBackground.png").convert()
+    tempBack = pygame.image.load("chessBackground.jpg").convert()
     
     terrain = Terrain(window)
     

@@ -11,7 +11,8 @@ myServer = None
 cc = None
 username = str(random.randint(1, 100))  # Temp - assign a random username
 
-#wif #moving = left, draw left.
+# wif #moving = left, draw left.
+
 
 def Main(runServer):  # Main function, starts the entire game
     if runServer:
@@ -46,8 +47,8 @@ def shutdown():
     if myServer != None:
         myServer.close()
         
-    #time.sleep(0.5)  # Allow some time for all threads to close cleanly
-    #os._exit(0)  # Ensure all threads are closed (unclean but works for now)
+    # time.sleep(0.5)  # Allow some time for all threads to close cleanly
+    # os._exit(0)  # Ensure all threads are closed (unclean but works for now)
 
 
 if __name__ == "__main__":
