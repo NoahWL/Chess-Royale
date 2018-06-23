@@ -32,7 +32,7 @@ class Terrain:
         plat6 = pygame.Rect(100, 450, 443, 80)
         plat7 = pygame.Rect(-100, 450, 443, 80)
         plat8 = pygame.Rect(1707, 450, 443, 80)
-        wall1 = pygame.Rect(920, 250, 40, 443)
+        wall1 = pygame.Rect(920, 250, 125, 443)
         
         self.terrain = [floor, plat1, plat2, plat3, plat4, plat5, plat6, plat7, plat8, wall1]
         
@@ -53,12 +53,10 @@ class Terrain:
         self.win.blit(self.grassPlatform, (1707, 450))
         self.win.blit(self.grassPlatform, (1407, 450))
         
-        
-        
         # Weapons
         for weapon in self.weapons:
             if weapon.onGround:
-                weapon.draw(weapon.posX, weapon.posY)
+                weapon.draw(weapon.posX, weapon.posY, True)
                 #pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
             else:
                 self.weapons.remove(weapon)

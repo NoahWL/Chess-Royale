@@ -4,23 +4,31 @@ import random
 
 class PistolBullet:
     
-    def __init__(self, window, terrain, posX, posY):
+    def __init__(self, window, terrain, posX, posY, direction):
         self.startPosX = posX
         self.posX = posX
         self.posY = posY
         self.speed = 10
         self.win = window
+        self.direction = direction
         self.terrain = terrain
-        self.bullet = pygame.image.load("bullet.png")
+        self.bulletR = pygame.image.load("bullet.png")
+        self.bulletL = pygame.transform.flip(self.bulletR, True, False)
         self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)
         
     def drawBullet(self):
         
         if abs(self.startPosX - self.posX) < 1800:
-            self.posX += self.speed
+            if self.direction:
+                self.posX += self.speed
+            else:
+                self.posX -= self.speed
             
             self.hitbox.x = self.posX
-            self.win.blit(self.bullet, (self.posX + 30, self.posY + 20))
+            if self.direction:
+                self.win.blit(self.bulletR, (self.posX + 30, self.posY + 20))
+            else:
+                self.win.blit(self.bulletL, (self.posX - 38, self.posY + 20))
             
             for t in self.terrain:
                 if self.hitbox.colliderect(t):
@@ -32,23 +40,33 @@ class PistolBullet:
 
 class SMGBullet:
      
-    def __init__(self, window, terrain, posX, posY):
+    def __init__(self, window, terrain, posX, posY, direction):
         self.startPosX = posX
         self.posX = posX
         self.posY = posY
+        self.direction = direction
         self.speed = 10
         self.win = window
         self.terrain = terrain
         self.bullet = pygame.image.load("smgBullet.png")
-        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 20, 20)
+        self.hitbox = pygame.Rect(self.posX + 48, self.posY + 20, 20, 20)
          
     def drawBullet(self):
          
         if abs(self.startPosX - self.posX) < 900:
-            self.posX += self.speed
+            if self.direction:
+                self.posX += self.speed
+            else:
+                self.posX -= self.speed
              
-            self.hitbox.x = self.posX
-            self.win.blit(self.bullet, (self.posX + 60, self.posY + 20))
+            if self.direction:
+                self.hitbox.x = self.posX + 60
+            else:
+                self.hitbox.x = self.posX - 65
+            if self.direction:
+                self.win.blit(self.bullet, (self.posX + 60, self.posY + 20))
+            else:
+                self.win.blit(self.bullet, (self.posX - 44, self.posY + 20))
              
             for t in self.terrain:
                 if self.hitbox.colliderect(t):
@@ -61,10 +79,11 @@ class SMGBullet:
 
 class ShotgunBullet:
     
-    def __init__(self, window, terrain, posX, posY, pyState):
+    def __init__(self, window, terrain, posX, posY, pyState, direction):
         self.startPosX = posX
         self.posX = posX
         self.posY = posY
+        self.direction = direction
         self.speedX = 10
         self.speedY = 2
         self.pyState = pyState
@@ -87,12 +106,15 @@ class ShotgunBullet:
             self.posY -= self.speedY
         
         if abs(self.startPosX - self.posX) < 1800:
-            self.posX += self.speedX
+            if self.direction:
+                self.posX += self.speedX
+            else:
+                self.posX -= self.speedX
             
-            self.hitbox.x = self.posX + 65
-            self.hitbox.y = self.posY + 15
+            self.hitbox.x = self.posX
+            self.hitbox.y = self.posY
             
-            self.win.blit(self.bullet, (self.posX + 65, self.posY + 15))
+            self.win.blit(self.bullet, (self.posX, self.posY))
             
             for t in self.terrain:
                 if self.hitbox.colliderect(t):
@@ -128,7 +150,7 @@ class RPGPellets:
             self.hitbox.x = self.posX - 10
             self.hitbox.y = self.posY + 15
             
-            self.win.blit(self.bullet, (self.posX - 10, self.posY + 15))
+            self.win.blit(self.bullet, (self.posX, self.posY))
             
             for t in self.terrain:
                 if self.hitbox.colliderect(t):
@@ -148,14 +170,16 @@ class RPGPellets:
         
 class RPGBullet:
     
-    def __init__(self, window, terrain, posX, posY):
+    def __init__(self, window, terrain, posX, posY, direction):
         self.startPosX = posX
         self.posX = posX
         self.posY = posY
+        self.direction = direction
         self.speed = 10
         self.win = window
         self.terrain = terrain
-        self.bullet = pygame.image.load("rpgBullet.png")
+        self.rpgBulletR = pygame.image.load("rpgBullet.png")
+        self.rpgBulletL = pygame.transform.flip(self.rpgBulletR, True, False)
         self.hitbox = pygame.Rect(self.posX, self.posY + 2, 32, 15)
         self.collided = False
         self.pellets = []
@@ -172,15 +196,24 @@ class RPGBullet:
         else:
             #pygame.draw.rect(self.win, (0,0,0), self.hitbox)
             if abs(self.startPosX - self.posX) < 2000:
-                self.posX += self.speed
+                if self.direction:
+                    self.posX += self.speed
+                else:
+                    self.posX -= self.speed
                 
                 self.hitbox.x = self.posX
-                self.win.blit(self.bullet, (self.posX, self.posY))
-                
+                if self.direction:
+                    self.win.blit(self.rpgBulletR, (self.posX, self.posY))
+                else:
+                    self.win.blit(self.rpgBulletL, (self.posX, self.posY))
+                if self.direction:
+                    magicNum = -10
+                else:
+                    magicNum = 20
                 for t in self.terrain:
                     if self.hitbox.colliderect(t):
                         for i in range(15):
-                            pellet = RPGPellets(self.win, self.terrain, self.posX - 10, self.posY - 10)
+                            pellet = RPGPellets(self.win, self.terrain, self.posX + magicNum, self.posY)
                             self.pellets.append(pellet)
                         self.collided = True
                             

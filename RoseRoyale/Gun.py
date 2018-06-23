@@ -11,17 +11,21 @@ class Pistol:
         self.posX = posX
         self.posY = posY
         self.win = window
-        self.pistol = pygame.image.load("pistol.png")
+        self.pistolImageR = pygame.image.load("pistol.png")
+        self.pistolImageL = pygame.transform.flip(self.pistolImageR, True, False)
         self.terrain = terrain
-        window.blit(self.pistol, (self.posX, self.posY))
         
-    def draw(self, x, y):
+    def draw(self, x, y, direction):
         self.posX = x
         self.posY = y
-        self.win.blit(self.pistol, (x + 15, y + 25))
+        self.direction = direction
+        if direction:
+            self.win.blit(self.pistolImageR, (x + 15, y + 25))
+        else:
+            self.win.blit(self.pistolImageL, (x - 30, y + 25))
     
     def shoot(self):
-        return PistolBullet(self.win, self.terrain, self.posX, self.posY)
+        return PistolBullet(self.win, self.terrain, self.posX, self.posY, self.direction)
 
 class SMG:
     
@@ -30,40 +34,53 @@ class SMG:
         self.posX = posX
         self.posY = posY
         self.win = window
-        self.smg = pygame.image.load("smg.png")
+        self.smgImageR = pygame.image.load("smg.png")
+        self.smgImageL = pygame.transform.flip(self.smgImageR, True, False)
         self.terrain = terrain
         self.onGround = onGround
         self.hitbox = pygame.Rect(posX + 15, posY + 25, 60, 24)
-        window.blit(self.smg, (self.posX, self.posY))
         
-    def draw(self, x, y):
+    def draw(self, x, y, direction):
         self.posX = x
         self.posY = y
-        self.win.blit(self.smg, (x + 15, y + 25))
+        self.direction = direction
+        if direction:
+            self.win.blit(self.smgImageR, (x + 15, y + 25))
+        else:
+            self.win.blit(self.smgImageL, (x - 30, y + 25))
     
     def shoot(self):
-        return SMGBullet(self.win, self.terrain, self.posX, self.posY)
+        return SMGBullet(self.win, self.terrain, self.posX, self.posY, self.direction)
 
 class Shotgun:
 
     def __init__(self, posX, posY, window, terrain, onGround):
         self.name = 'shotgun'
         self.posX = posX
+        self.direction = True
         self.posY = posY
         self.win = window
-        self.shotgunImage = pygame.image.load("shotgun.png")
+        self.shotgunImageR = pygame.image.load("shotgun.png")
+        self.shotgunImageL = pygame.transform.flip(self.shotgunImageR, True, False)
         self.hitbox = pygame.Rect(posX - 15, posY + 28, 60, 24)  # Used for pickup.  Does not need to be changed once picked up.
         self.terrain = terrain
         self.onGround = onGround
-        window.blit(self.shotgunImage, (self.posX, self.posY))
     
-    def draw(self, x, y):
+    def draw(self, x, y, direction):
         self.posX = x
         self.posY = y
-        self.win.blit(self.shotgunImage, (x + 25, y + 28))
+        self.direction = direction
+        if direction:
+            self.win.blit(self.shotgunImageR, (x + 25, y + 28))
+        else:
+            self.win.blit(self.shotgunImageL, (x - 40, y + 28))
     
     def shoot(self, pyMove):
-        return ShotgunBullet(self.win, self.terrain, self.posX, self.posY, pyMove)
+        if self.direction:
+            magicNum = 65
+        else:
+            magicNum = -50
+        return ShotgunBullet(self.win, self.terrain, self.posX + magicNum, self.posY + 15, pyMove, self.direction)
 
 
 class RPG:
@@ -72,18 +89,27 @@ class RPG:
         self.name = 'rpg'
         self.posX = posX
         self.posY = posY
-        self.rpg = pygame.image.load("rpg.png")
         self.onGround = onGround
+        self.rpgImageR = pygame.image.load("rpg.png")
+        self.rpgImageL = pygame.transform.flip(self.rpgImageR, True, False)
         self.win = window
         self.terrain = terrain
         self.hitbox = pygame.Rect(posX, posY + 26, 60, 24)
         
-    def draw(self, x, y):
+    def draw(self, x, y, direction):
         self.posX = x
         self.posY = y 
-        self.win.blit(self.rpg, (self.posX, self.posY + 26))
+        self.direction = direction
+        if direction:
+            self.win.blit(self.rpgImageR, (x, y + 26))
+        else:
+            self.win.blit(self.rpgImageL, (x - 35, y + 26))
     
     def shoot(self):
-        return RPGBullet(self.win, self.terrain, self.posX + 30, self.posY)
+        if self.direction:
+            magicNum = 30
+        else:
+            magicNum = -30
+        return RPGBullet(self.win, self.terrain, self.posX + magicNum, self.posY, self.direction)
     
         

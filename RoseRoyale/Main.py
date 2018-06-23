@@ -12,6 +12,7 @@ myServer = None
 cc = None
 username = str(random.randint(1, 100))  # Temp - assign a random username
 
+#wif #moving = left, draw left.
 
 def Main(runServer):  # Main function, starts the entire game
     if runServer:

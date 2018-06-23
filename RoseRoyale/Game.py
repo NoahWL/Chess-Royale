@@ -51,11 +51,11 @@ def initialize():
     terrainList = terrain.terrain
     
     # Level set up
-    player = Player(600, 50, 'shotgun', window, terrainList)
-
+    player = Player(600, 50, 'pistol', window, terrainList)
+    
     posx = 0
     posy = 0
-    
+    direction = True
     lastShot = 0
     clickCount = 0
     
@@ -86,9 +86,11 @@ def initialize():
         
         if keys[K_a]:
             posx = -6
+            direction = False
             
         if keys[K_d]:
             posx = 6
+            direction = True
             
         if keys[K_SPACE] and player.onGround:
             posy = -29
@@ -115,7 +117,7 @@ def initialize():
                 bullets.append(player.getWeapon().shoot())
                 lastShot = time.time()
                 
-            elif time.time() - lastShot > 0 and player.weaponName == 'rpg':
+            elif time.time() - lastShot > 2 and player.weaponName == 'rpg':
                 bullets.append(player.getWeapon().shoot())
                 lastShot = time.time()
         
@@ -126,7 +128,7 @@ def initialize():
         if (posx != 0 or posy != 0):
             window.blit(tempBack, (0, 0))
             terrain.draw()
-            player.move(posx, posy, terrainList)
+            player.move(posx, posy, terrainList, direction)
             
         # Draw remote players
         for mpplayer in players:

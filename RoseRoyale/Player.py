@@ -10,8 +10,8 @@ class Player:
     def __init__(self, posX, posY, weapon, window, terrainList):        
         self.win = window
         self.terrainList = terrainList
-        
-        self.pPlayer = pygame.image.load("chess piece.png").convert_alpha()
+        self.pTextureR = pygame.image.load('chess_piece_right.png').convert_alpha()
+        self.pTextureL = pygame.image.load('chess_piece_left.png').convert_alpha()
         self.hitbox = pygame.Rect(posX, posY, 45, 104)
         self.posX = posX
         self.posY = posY
@@ -20,7 +20,6 @@ class Player:
         self.weaponName = weapon
         self.living = True
         self.onGround = False
-        
         self.setWeapon(weapon)
     
     def _checkTerrain(self, terrain):
@@ -30,7 +29,7 @@ class Player:
             
         return False
     
-    def move(self, dx, dy, terrain):
+    def move(self, dx, dy, terrain, direction):
         self.onGround = False
         
         # Process movement and collisions in x-axis
@@ -68,8 +67,12 @@ class Player:
                 
         self.posX = self.hitbox.x
         self.posY = self.hitbox.y
-        self.win.blit(self.pPlayer, (self.posX, self.posY)) # Draw player position scaled to screen
-        self.weapon.draw(self.posX, self.posY)
+        if direction:
+            self.win.blit(self.pTextureR, (self.posX, self.posY)) # Draw player position scaled to screen
+        else:
+            self.win.blit(self.pTextureL, (self.posX, self.posY))
+            
+        self.weapon.draw(self.posX, self.posY, direction)
         
         totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
