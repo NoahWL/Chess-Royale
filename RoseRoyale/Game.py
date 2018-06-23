@@ -24,7 +24,7 @@ resolutionY = GetSystemMetrics(1)
 windowScaleX = 1
 windowScaleY = 1
 
-bullets = [] # List of bullets that need to be drawn, updated, collided with
+bullets = []  # List of bullets that need to be drawn, updated, collided with
 
 
 def initialize():
@@ -36,9 +36,9 @@ def initialize():
     os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
     global mainWin
     global window
-    mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME)
+    mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
-    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.NOFRAME)
+    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
@@ -77,12 +77,14 @@ def initialize():
             
             if event.type == pygame.QUIT:
                 shouldRun = False
+                pygame.display.quit()
+                pygame.quit()
+                return
                 
         keys = pygame.key.get_pressed()
         if keys[K_ESCAPE]:
-            pygame.display.quit()
-            pygame.quit()
             shouldRun = False
+            break
         
         if keys[K_a]:
             posx = -6
@@ -120,9 +122,6 @@ def initialize():
             elif time.time() - lastShot > 2 and player.weaponName == 'rpg':
                 bullets.append(player.getWeapon().shoot())
                 lastShot = time.time()
-        
-        if not shouldRun:
-            break
         
         # Draw the player if it has moved
         if (posx != 0 or posy != 0):

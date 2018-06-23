@@ -6,7 +6,6 @@ from threading import Thread
 import RoseRoyale.Game
 import time
 import random
-import os
 
 myServer = None
 cc = None
@@ -47,9 +46,9 @@ def shutdown():
     if myServer != None:
         myServer.close()
         
-    time.sleep(0.5)  # Allow some time for all threads to close cleanly
-    os._exit(0)  # Ensure all threads are closed (unclean but works for now)
+    #time.sleep(0.5)  # Allow some time for all threads to close cleanly
+    #os._exit(0)  # Ensure all threads are closed (unclean but works for now)
 
 
 if __name__ == "__main__":
-    Main(False)
+   Main(False)
