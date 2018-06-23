@@ -68,7 +68,7 @@ class Player:
         self.posX = self.hitbox.x
         self.posY = self.hitbox.y
         if direction:
-            self.win.blit(self.pTextureR, (self.posX, self.posY)) # Draw player position scaled to screen
+            self.win.blit(self.pTextureR, (self.posX, self.posY)) # Draw player
         else:
             self.win.blit(self.pTextureL, (self.posX, self.posY))
             

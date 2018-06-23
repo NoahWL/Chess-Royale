@@ -8,9 +8,6 @@ class Terrain:
     
     def __init__(self, win):
         self.win = win
-        self.scaleX = RoseRoyale.Game.windowScaleX
-        self.scaleY = RoseRoyale.Game.windowScaleY
-        
         self.setup()
         
     def setup(self):
@@ -62,13 +59,10 @@ class Terrain:
                 self.weapons.remove(weapon)
                 
     def drawAfter(self):
-        sX = self.scaleX
-        sY = self.scaleY
-        
-        self.win.blit(self.upsidedownGrass, (750 * sX, 990 * sY))
+        self.win.blit(self.upsidedownGrass, (750, 990))
         
         for i in range(102):
-            self.win.blit(self.floor, (int(21 * sX) * i, 1080 - self.floor.get_height()))
+            self.win.blit(self.floor, (21 * i, 1080 - self.floor.get_height()))
     
     
     
