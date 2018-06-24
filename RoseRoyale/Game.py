@@ -26,26 +26,24 @@ windowScaleY = 1
 
 bullets = []  # List of bullets that need to be drawn, updated, collided with
 terrain = None  # Terrain object containing and managing all terrain that must be drawn
-terrainList = None  # List of terrain objects pulled from terrain
 
 
-def initialize():
+def initialize(username):
     shouldRun = True
     
     # Pygame related setup
     pygame.display.init()
     
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+    #os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
     global mainWin
     global window
     global terrain
-    global terrainList
+    
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
-    terrain = Terrain(window)
-    terrainList = terrain.terrain
-    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
-    # mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
+    terrain = Terrain(window, players)
+    #mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
+    mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
@@ -54,7 +52,8 @@ def initialize():
     tempBack = pygame.image.load("chessBackground.jpg").convert()
     
     # Level set up
-    player = Player(600, 50, 'pistol', window, terrainList)
+    player = Player(username, 600, 50, 'pistol', window, terrain)
+    players.append(player)
     
     posx = 0
     posy = 0
@@ -131,11 +130,12 @@ def initialize():
         if (posx != 0 or posy != 0):
             window.blit(tempBack, (0, 0))
             terrain.draw()
-            player.move(posx, posy, terrainList, direction)
+            player.move(posx, posy, terrain, direction)
             
         # Draw remote players
         for mpplayer in players:
-            mpplayer.draw()
+            if not mpplayer.isLocal:
+                mpplayer.draw()
         
         # Draw bullets
         for bullet in bullets:
@@ -162,7 +162,7 @@ def updateMPPlayer(name, x, y, direction, weaponName):
             player = p
     if player == None:
         global window
-        player = MPPlayer(name, x, y, window, weaponName)
+        player = MPPlayer(name, x, y, window, terrain, weaponName)
         players.append(player)
     else:
         player.posX = x
@@ -172,19 +172,19 @@ def updateMPPlayer(name, x, y, direction, weaponName):
             player.setWeapon(weaponName)
 
         
-def spawnBullet(bulletX, bulletY, bulletType, bulletDirection):
+def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
     bullet = None
      
     if bulletType == 'PistolBullet':
-        bullet = PistolBullet(window, terrainList, bulletX, bulletY, bulletDirection)
+        bullet = PistolBullet(window, terrain, bulletX, bulletY, bulletDirection, owner)
     elif bulletType == 'SMGBullet':
-        bullet = SMGBullet(window, terrainList, bulletX, bulletY, bulletDirection)
+        bullet = SMGBullet(window, terrain, bulletX, bulletY, bulletDirection, owner)
     elif bulletType == 'RPGBullet':
-        bullet = RPGBullet(window, terrainList, bulletX, bulletY, bulletDirection)
+        bullet = RPGBullet(window, terrain, bulletX, bulletY, bulletDirection, owner)
     elif bulletType == 'ShotgunBullet':
-        bullet = ShotgunBullet(window, terrainList, bulletX, bulletY, 0, bulletDirection)
-        bullets.append(ShotgunBullet(window, terrainList, bulletX, bulletY, 1, bulletDirection))
-        bullets.append(ShotgunBullet(window, terrainList, bulletX, bulletY, 2, bulletDirection))
+        bullet = ShotgunBullet(window, terrain, bulletX, bulletY, 0, bulletDirection, owner)
+        bullets.append(ShotgunBullet(window, terrain, bulletX, bulletY, 1, bulletDirection, owner))
+        bullets.append(ShotgunBullet(window, terrain, bulletX, bulletY, 2, bulletDirection, owner))
          
     bullets.append(bullet)
     

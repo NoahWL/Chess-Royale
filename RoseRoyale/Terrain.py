@@ -6,9 +6,10 @@ from RoseRoyale.Gun import Shotgun, RPG, SMG
 
 class Terrain:
     
-    def __init__(self, win):
+    def __init__(self, win, players):
         self.win = win
         self.setup()
+        self.players = players
         
     def setup(self):
         
@@ -34,8 +35,9 @@ class Terrain:
         self.terrain = [floor, plat1, plat2, plat3, plat4, plat5, plat6, plat7, plat8, wall1]
         
         # List of weapons on ground
-        self.weapons = [Shotgun(300, 1020, self.win, self.terrain, True), RPG(950, 1020, self.win, self.terrain, True), 
-                        SMG(1600, 1020, self.win, self.terrain, True)]
+        self.weapons = [Shotgun(300, 1020, self.win, self, True,
+                        'terrain'), RPG(950, 1020, self.win, self, True, 'terrain'),
+                        SMG(1600, 1020, self.win, self, True, 'terrain')]
         
     def draw(self):
         # Draw platforms
@@ -54,7 +56,7 @@ class Terrain:
         for weapon in self.weapons:
             if weapon.onGround:
                 weapon.draw(weapon.posX, weapon.posY, True)
-                #pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
+                # pygame.draw.rect(self.win, (0, 0, 0), weapon.hitbox)
             else:
                 self.weapons.remove(weapon)
                 
@@ -63,7 +65,4 @@ class Terrain:
         
         for i in range(102):
             self.win.blit(self.floor, (21 * i, 1080 - self.floor.get_height()))
-    
-    
-    
    

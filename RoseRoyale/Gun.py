@@ -6,14 +6,17 @@ from RoseRoyale.Bullet import PistolBullet, RPGBullet, SMGBullet, ShotgunBullet
 
 class Pistol:
     
-    def __init__(self, posX, posY, window, terrain):
+    def __init__(self, posX, posY, window, terrain, owner):
         self.name = 'pistol'
         self.posX = posX
         self.posY = posY
+        self.owner = owner
         self.win = window
         self.pistolImageR = pygame.image.load("pistol.png").convert_alpha()
         self.pistolImageL = pygame.transform.flip(self.pistolImageR, True, False)
         self.terrain = terrain
+        self.terrainList = terrain.terrain
+        self.players = terrain.players
         
     def draw(self, x, y, direction):
         self.posX = x
@@ -27,13 +30,14 @@ class Pistol:
     def shoot(self):
         if RoseRoyale.ClientConnection.theClientConnection != None:
             RoseRoyale.ClientConnection.theClientConnection.sendBullet(self.posX, self.posY, 'PistolBullet', self.direction)
-        return PistolBullet(self.win, self.terrain, self.posX, self.posY, self.direction)
+        return PistolBullet(self.win, self.terrain, self.posX, self.posY, self.direction, self.owner)
 
 
 class SMG:
     
-    def __init__(self, posX, posY, window, terrain, onGround):
+    def __init__(self, posX, posY, window, terrain, onGround, owner):
         self.name = 'smg'
+        self.owner = owner
         self.posX = posX
         self.posY = posY
         self.win = window
@@ -53,13 +57,14 @@ class SMG:
             self.win.blit(self.smgImageL, (x - 30, y + 25))
     
     def shoot(self):
-        return SMGBullet(self.win, self.terrain, self.posX, self.posY, self.direction)
+        return SMGBullet(self.win, self.terrain, self.posX, self.posY, self.direction, self.owner)
 
 
 class Shotgun:
 
-    def __init__(self, posX, posY, window, terrain, onGround):
+    def __init__(self, posX, posY, window, terrain, onGround, owner):
         self.name = 'shotgun'
+        self.owner = owner
         self.posX = posX
         self.direction = True
         self.posY = posY
@@ -84,13 +89,14 @@ class Shotgun:
             magicNum = 65
         else:
             magicNum = -50
-        return ShotgunBullet(self.win, self.terrain, self.posX + magicNum, self.posY + 15, pyMove, self.direction)
+        return ShotgunBullet(self.win, self.terrain, self.posX + magicNum, self.posY + 15, pyMove, self.direction, self.owner)
 
 
 class RPG:
     
-    def __init__(self, posX, posY, window, terrain, onGround):
+    def __init__(self, posX, posY, window, terrain, onGround, owner):
         self.name = 'rpg'
+        self.owner = owner
         self.posX = posX
         self.posY = posY
         self.onGround = onGround
@@ -102,7 +108,7 @@ class RPG:
         
     def draw(self, x, y, direction):
         self.posX = x
-        self.posY = y 
+        self.posY = y
         self.direction = direction
         if direction:
             self.win.blit(self.rpgImageR, (x, y + 26))
@@ -114,5 +120,5 @@ class RPG:
             magicNum = 30
         else:
             magicNum = -30
-        return RPGBullet(self.win, self.terrain, self.posX + magicNum, self.posY, self.direction)
+        return RPGBullet(self.win, self.terrain, self.posX + magicNum, self.posY, self.direction, self.owner)
         
