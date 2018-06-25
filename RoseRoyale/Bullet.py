@@ -1,5 +1,6 @@
 import pygame
 import random
+import math as m
 
 
 def checkPlayerCollision(bullet, players):
@@ -142,7 +143,7 @@ class ShotgunBullet:
         
 class RPGPellets:
     
-    def __init__(self, window, terrain, posX, posY, owner):
+    def __init__(self, window, terrain, posX, posY, owner, i):
         self.name = 'RPGPellet'
         self.owner = owner
         self.win = window
@@ -150,12 +151,14 @@ class RPGPellets:
         self.terrainList = terrain.terrain
         self.startPosX = posX
         
-        self.speedX = random.randint(-5, 5)
-        self.speedY = random.randint(-5, 5)
-        if self.speedX == 0:
-            self.speedX = 1
-        if self.speedY == 0:
-            self.speedY = -1
+        self.speedY = -5 * m.sin(24 * i)
+        self.speedX = 5 * m.cos(24 * i)
+        
+        
+#         if self.speedX == 0:
+#             self.speedX = 1
+#         if self.speedY == 0:
+#             self.speedY = -1
         self.damage = 5
         self.bounce = 0
         
@@ -237,7 +240,7 @@ class RPGBullet:
                     
                 def spawnPellets():
                     for i in range(15):
-                        pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner)
+                        pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
                         self.pellets.append(pellet)
                     self.collided = True
                     
