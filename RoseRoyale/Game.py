@@ -133,7 +133,7 @@ def initialize(username, ClientConnection):
                 spawnedBullet = player.getWeapon().shoot()
                 lastShot = time.time()
                 
-            elif time.time() - lastShot > 2 and weapon == 'RPG':
+            elif time.time() - lastShot > 0 and weapon == 'RPG':
                 spawnedBullet = player.getWeapon().shoot()
                 lastShot = time.time()
             
