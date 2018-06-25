@@ -1,7 +1,7 @@
 import pygame
 from RoseRoyale.Gun import Pistol, RPG, SMG, Shotgun
 from RoseRoyale.Terrain import Terrain
-from RoseRoyale.EndScreen import Win
+from RoseRoyale.EndScreen import WinScreen, LoseScreen
 import RoseRoyale.ClientConnection
 
 
@@ -12,6 +12,8 @@ class Player:
         self.name = name
         self.terrain = terrain
         self.terrainList = terrain.terrain
+        self.isLocal = True
+        
         self.pTextureR = pygame.image.load('chess_piece_right.png').convert_alpha()
         self.pTextureL = pygame.image.load('chess_piece_left.png').convert_alpha()
         self.hitbox = pygame.Rect(posX, posY, 45, 104)
@@ -19,10 +21,14 @@ class Player:
         self.posY = posY
         self.serverPosX = 0
         self.serverPosY = 0
-        self.isLocal = True
-        self.weaponName = weapon
-        self.living = True
         self.onGround = False
+        
+        self.alive = True
+        self.health = 100
+        self.healthBarGreen = pygame.rect.Rect(self.posX, self.posY, 100, 5)
+        self.healthBarRed = pygame.rect.Rect(self.posX, self.posY, 100, 5)
+        
+        self.weaponName = weapon
         self.setWeapon(weapon)
     
     def _checkTerrain(self):
@@ -32,7 +38,17 @@ class Player:
             
         return False
     
-    def move(self, dx, dy, terrain, direction):
+    def _drawHealth(self):
+        self.healthBarRed.x = self.posX - 26
+        self.healthBarRed.y = self.posY - 20
+        self.healthBarGreen.x = self.posX - 26
+        self.healthBarGreen.y = self.posY - 20
+        
+        self.healthBarGreen.width = self.health
+        pygame.draw.rect(self.win, (255, 0, 0), self.healthBarRed)
+        pygame.draw.rect(self.win, (0, 255, 0), self.healthBarGreen)
+    
+    def move(self, dx, dy, direction):
         self.onGround = False
         
         # Process movement and collisions in x-axis
@@ -67,37 +83,39 @@ class Player:
                 if self._checkTerrain():
                     self.hitbox.y = self.hitbox.y + 1
                     break
-                
+        
+        # Update player's position variables
         self.posX = self.hitbox.x
         self.posY = self.hitbox.y
+        
+        # Depending on which way the player last moved, draw their sprite facing that direction
         if direction:
-            self.win.blit(self.pTextureR, (self.posX, self.posY))  # Draw player
+            self.win.blit(self.pTextureR, (self.posX, self.posY))
         else:
             self.win.blit(self.pTextureL, (self.posX, self.posY))
             
+        # Draw the player's health bar above their head
+        self._drawHealth()
+        
+        # Draw the player's weapon
         self.weapon.draw(self.posX, self.posY, direction)
         
+        # Send positional data to the server if the player has moved more than four pixels (saves bandwidth)
         totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
         if abs(totalMovement - totalMovementServer) > 4 and RoseRoyale.ClientConnection.theClientConnection != None:
             RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY, direction, self.weaponName)  # Send new player position to the server
             self.serverPosX = self.posX
             self.serverPosY = self.posY
-        
-    def getPosX(self):
-        return self.posX
-    
-    def getPosY(self):
-        return self.posY
     
     def setWeapon(self, weapon):
-        if (weapon == 'shotgun'):
+        if (weapon == 'Shotgun'):
             self.weapon = Shotgun(126, 770, self.win, self.terrain, False, self.name)
-        if (weapon == 'pistol'):
+        if (weapon == 'Pistol'):
             self.weapon = Pistol(126, 770, self.win, self.terrain, self.name)
-        if (weapon == 'rpg'):
+        if (weapon == 'RPG'):
             self.weapon = RPG(126, 770, self.win, self.terrain, False, self.name)
-        if (weapon == 'smg'):
+        if (weapon == 'SMG'):
             self.weapon = SMG(126, 770, self.win, self.terrain, False, self.name)
             
         self.weaponName = weapon
@@ -112,6 +130,14 @@ class Player:
                 self.weapon.owner = self.name
                 self.weaponName = weapon.name
                 weapon.onGround = False
-    
-    def lived(self):
-        Win.draw(self.win)
+                
+    def die(self):
+        self.alive = False
+        
+    def hit(self, damage):
+        self.health -= damage
+        
+        if self.health <= 0:
+            self.health = 0
+            self.die()
+            

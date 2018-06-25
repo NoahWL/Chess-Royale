@@ -3,7 +3,6 @@ import RoseRoyale.Game as rg
 import time
 import socket
 
-global theClientConnection
 theClientConnection = None
 
 
@@ -12,6 +11,7 @@ class ClientConnection:
     def __init__(self, username):
         global theClientConnection
         theClientConnection = self  # Singleton
+        
         self.username = username
         self.shouldRun = True
         print("Client connection starting...")
@@ -35,7 +35,7 @@ class ClientConnection:
         self.connectionManager.sendMessage(message)
         
     def handleMessage(self, message):
-        #print('handling:', message)
+        # print('handling:', message)
         messageType = message[message.find('!type') + 5 : message.find('!/type')]  # Get message messageType
         
         if messageType == 'PLAYERPOSITION':

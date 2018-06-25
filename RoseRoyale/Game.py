@@ -8,9 +8,10 @@ from win32api import GetSystemMetrics
 
 from RoseRoyale.Player import Player
 from RoseRoyale.MPPlayer import MPPlayer
-from RoseRoyale.Gun import Pistol
-from RoseRoyale.Bullet import PistolBullet, RPGPellets, RPGBullet, ShotgunBullet, SMGBullet
+from RoseRoyale.Bullet import PistolBullet, RPGBullet, ShotgunBullet, SMGBullet
 from RoseRoyale.Terrain import Terrain
+from RoseRoyale.EndScreen import WinScreen, LoseScreen
+
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
 
@@ -28,13 +29,13 @@ bullets = []  # List of bullets that need to be drawn, updated, collided with
 terrain = None  # Terrain object containing and managing all terrain that must be drawn
 
 
-def initialize(username):
+def initialize(username, ClientConnection):
     shouldRun = True
     
     # Pygame related setup
     pygame.display.init()
     
-    #os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
+    # os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
     global mainWin
     global window
     global terrain
@@ -42,7 +43,7 @@ def initialize(username):
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
     terrain = Terrain(window, players)
-    #mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
+    # mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
     mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
     
     pygame.display.set_caption('Rose Royale')
@@ -51,17 +52,25 @@ def initialize(username):
     
     tempBack = pygame.image.load("chessBackground.jpg").convert()
     
+    # End screen setup
+    winscreen = WinScreen(window)
+    losescreen = LoseScreen(window)
+    
     # Level set up
-    player = Player(username, 600, 50, 'pistol', window, terrain)
+    player = Player(username, 600, 50, 'Pistol', window, terrain)
     players.append(player)
     
     posx = 0
     posy = 0
     direction = True
     lastShot = 0
-    clickCount = 0
     
+    r = pygame.rect.Rect((50, 50), (5, 5))
     while shouldRun:
+        # Check if an end screen should be drawn
+        if not player.alive:
+            losescreen.draw()
+        
         # Manage local player physics and controls
         if posx > 0:
             posx = posx - 1
@@ -101,41 +110,49 @@ def initialize(username):
             posy = -29
         
         if keys[K_e]:
-            if time.time() - lastShot > 0.75:
+            if time.time() - lastShot > 0.10:
                 player.pickup(terrain)
                 lastShot = time.time()
         
         click = pygame.mouse.get_pressed()
             
         if click[0] == 1:
-            clickCount += 1
+            weapon = player.weaponName
+            spawnedBullet = None
             
-            if time.time() - lastShot > 0.5 and player.weaponName == 'pistol':  # How often the player can shoot in seconds
-                    bullets.append(player.getWeapon().shoot())
+            if time.time() - lastShot > 0.5 and weapon == 'Pistol':  # How often the player can shoot in seconds
+                    spawnedBullet = player.getWeapon().shoot()
                     lastShot = time.time()
-            elif time.time() - lastShot > 0.75 and player.weaponName == 'shotgun':
+            elif time.time() - lastShot > 0.75 and weapon == 'Shotgun':
+                spawnedBullet = player.getWeapon().shoot(1)
                 for i in range(3):
                     bullets.append(player.getWeapon().shoot(i))
                 lastShot = time.time()
 
-            elif time.time() - lastShot > 0.15 and player.weaponName == 'smg':
-                bullets.append(player.getWeapon().shoot())
+            elif time.time() - lastShot > 0.15 and weapon == 'SMG':
+                spawnedBullet = player.getWeapon().shoot()
                 lastShot = time.time()
                 
-            elif time.time() - lastShot > 2 and player.weaponName == 'rpg':
-                bullets.append(player.getWeapon().shoot())
+            elif time.time() - lastShot > 2 and weapon == 'RPG':
+                spawnedBullet = player.getWeapon().shoot()
                 lastShot = time.time()
-        
-        # Draw the player if it has moved
-        if (posx != 0 or posy != 0):
-            window.blit(tempBack, (0, 0))
-            terrain.draw()
-            player.move(posx, posy, terrain, direction)
             
-        # Draw remote players
-        for mpplayer in players:
-            if not mpplayer.isLocal:
-                mpplayer.draw()
+            if spawnedBullet != None:
+                if ClientConnection != None:
+                    ClientConnection.sendBullet(spawnedBullet.posX, spawnedBullet.posY, spawnedBullet.name, direction)
+                if spawnedBullet.name != 'ShotgunBullet':
+                    bullets.append(spawnedBullet)
+
+        # Draw background, terrain (platforms, guns on ground, etc.)
+        window.blit(tempBack, (0, 0))
+        terrain.draw()
+        
+        # Draw players
+        for p in players:
+            if p.isLocal:
+                p.move(posx, posy, direction)
+            else:
+                p.draw()
         
         # Draw bullets
         for bullet in bullets:
@@ -156,20 +173,20 @@ def initialize(username):
 
 
 def updateMPPlayer(name, x, y, direction, weaponName):
-    player = None
+    mpplayer = None
     for p in players:
         if p.name == name:
-            player = p
-    if player == None:
+            mpplayer = p
+    if mpplayer == None:
         global window
-        player = MPPlayer(name, x, y, window, terrain, weaponName)
-        players.append(player)
+        mpplayer = MPPlayer(name, x, y, window, terrain, weaponName)
+        players.append(mpplayer)
     else:
-        player.posX = x
-        player.posY = y
-        player.direction = direction
-        if player.weaponName != weaponName:
-            player.setWeapon(weaponName)
+        mpplayer.posX = x
+        mpplayer.posY = y
+        mpplayer.direction = direction
+        if mpplayer.weaponName != weaponName:
+            mpplayer.setWeapon(weaponName)
 
         
 def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
@@ -187,4 +204,9 @@ def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
         bullets.append(ShotgunBullet(window, terrain, bulletX, bulletY, 2, bulletDirection, owner))
          
     bullets.append(bullet)
-    
+
+def getMouseScaled():
+    m1 = pygame.mouse.get_pos()[0]
+    m2 = pygame.mouse.get_pos()[1]
+    m1 = m1 * (1920 / resolutionX)
+    m2 = m2 * (1080 / resolutionY)

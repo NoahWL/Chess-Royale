@@ -1,37 +1,37 @@
 import pygame
 
-class Win:
+
+class WinScreen:
     
-    def  __init__(self):
+    def  __init__(self, window):
+        self.win = window
+        
         self.winScreen = pygame.image.load('winScreen.jpg').convert_alpha()
         self.buttonMain = pygame.image.load('buttonMain.png').convert_alpha()
         self.buttonQuit = pygame.image.load('buttonQuit.png').convert_alpha()
         
-        
-    def draw(self, win):
+    def draw(self):
         self.checkClick = True
-        self.win = win
-        win.blit(self.winScreen, (675, 350))
-        win.blit(self.buttonMain, (500, 800))
-        win.blit(self.buttonQuit, (1150, 800)) 
+        self.win.blit(self.winScreen, (675, 350))
+        self.win.blit(self.buttonMain, (500, 800))
+        self.win.blit(self.buttonQuit, (1150, 800)) 
         self.quitBox = pygame.Rect(1150, 800, 300, 100)
         
     def checkClick(self, win):
         pass
-            
-                        
-        
-class Lose:
+
+
+class LoseScreen:
     
-    def __init__(self):
+    def __init__(self, window):
+        self.win = window
+        
         self.deathScreen = pygame.image.load('deathScreen.jpeg').convert_alpha()
         self.buttonMain = pygame.image.load('buttonMain.png').convert_alpha()
         self.buttonQuit = pygame.image.load('buttonQuit.png').convert_alpha()
         
-    def draw(self, win):
-        win.blit(self.deathScreen, (675, 350))
-        win.blit(self.buttonMain, (500, 800))
-        win.blit(self.buttonQuit, (1150, 800))
-    
-        
+    def draw(self):
+        self.win.blit(self.deathScreen, (675, 350))
+        self.win.blit(self.buttonMain, (500, 800))
+        self.win.blit(self.buttonQuit, (1150, 800))
         

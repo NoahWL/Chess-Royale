@@ -7,19 +7,35 @@ class MPPlayer:
 
     def __init__(self, name, posX, posY, window, terrain, weaponName):
         self.name = name
+        self.direction = True
+        self.terrain = terrain
+        self.terrainList = terrain.terrain
+        self.win = window
+        self.isLocal = False
+        
         self.posX = posX
         self.posY = posY
-        self.direction = True
-        self.isLocal = False
-        self.terrain = terrain
-        
-        self.win = window
-        
-        self.setWeapon(weaponName)
-        
         self.pTextureR = pygame.image.load('chess_piece_right.png').convert_alpha()
         self.pTextureL = pygame.image.load('chess_piece_left.png').convert_alpha()
         self.hitbox = pygame.Rect(posX, posY, 45, 104)
+        
+        self.alive = True
+        self.health = 100
+        self.healthBarGreen = pygame.rect.Rect(self.posX, self.posY, 100, 5)
+        self.healthBarRed = pygame.rect.Rect(self.posX, self.posY, 100, 5)
+        
+        self.setWeapon(weaponName)
+        
+    def _drawHealth(self):
+        self.healthBarRed.x = self.posX - 26
+        self.healthBarRed.y = self.posY - 20
+        self.healthBarGreen.x = self.posX - 26
+        self.healthBarGreen.y = self.posY - 20
+        
+        self.healthBarGreen.width = self.health
+        
+        pygame.draw.rect(self.win, (255, 0, 0), self.healthBarRed)
+        pygame.draw.rect(self.win, (0, 255, 0), self.healthBarGreen)
         
     def draw(self):
         if self.direction:
@@ -29,15 +45,27 @@ class MPPlayer:
         self.weapon.draw(self.posX, self.posY, self.direction)
         self.hitbox.x = self.posX
         self.hitbox.y = self.posY
+        
+        self._drawHealth()
             
     def setWeapon(self, weapon):
-        if (weapon == 'shotgun'):
+        if (weapon == 'Shotgun'):
             self.weapon = Shotgun(126, 770, self.win, self.terrainList, False, self.name)
-        if (weapon == 'pistol'):
+        if (weapon == 'Pistol'):
             self.weapon = Pistol(126, 770, self.win, self.terrain, self.name)
-        if (weapon == 'rpg'):
+        if (weapon == 'RPG'):
             self.weapon = RPG(126, 770, self.win, self.terrainList, False, self.name)
-        if (weapon == 'smg'):
+        if (weapon == 'SMG'):
             self.weapon = SMG(126, 770, self.win, self.terrainList, False, self.name)
             
         self.weaponName = weapon
+        
+    def die(self):
+        self.alive = False
+        
+    def hit(self, damage):
+        self.health -= damage
+        
+        if self.health <= 0:
+            self.health = 0
+            self.die()

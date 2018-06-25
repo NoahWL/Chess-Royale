@@ -7,7 +7,7 @@ from RoseRoyale.Bullet import PistolBullet, RPGBullet, SMGBullet, ShotgunBullet
 class Pistol:
     
     def __init__(self, posX, posY, window, terrain, owner):
-        self.name = 'pistol'
+        self.name = 'Pistol'
         self.posX = posX
         self.posY = posY
         self.owner = owner
@@ -25,18 +25,16 @@ class Pistol:
         if direction:
             self.win.blit(self.pistolImageR, (x + 15, y + 25))
         else:
-            self.win.blit(self.pistolImageL, (x - 30, y + 25))
+            self.win.blit(self.pistolImageL, (x - 15, y + 25))
     
     def shoot(self):
-        if RoseRoyale.ClientConnection.theClientConnection != None:
-            RoseRoyale.ClientConnection.theClientConnection.sendBullet(self.posX, self.posY, 'PistolBullet', self.direction)
         return PistolBullet(self.win, self.terrain, self.posX, self.posY, self.direction, self.owner)
 
 
 class SMG:
     
     def __init__(self, posX, posY, window, terrain, onGround, owner):
-        self.name = 'smg'
+        self.name = 'SMG'
         self.owner = owner
         self.posX = posX
         self.posY = posY
@@ -63,7 +61,7 @@ class SMG:
 class Shotgun:
 
     def __init__(self, posX, posY, window, terrain, onGround, owner):
-        self.name = 'shotgun'
+        self.name = 'Shotgun'
         self.owner = owner
         self.posX = posX
         self.direction = True
@@ -95,30 +93,39 @@ class Shotgun:
 class RPG:
     
     def __init__(self, posX, posY, window, terrain, onGround, owner):
-        self.name = 'rpg'
+        self.name = 'RPG'
         self.owner = owner
+        self.offsetX = 0
+        self.offsetY = 26
+        
         self.posX = posX
         self.posY = posY
         self.onGround = onGround
+        self.hitbox = pygame.Rect(posX, posY + 26, 60, 24)  # Pickup hitbox
         self.rpgImageR = pygame.image.load("rpg.png").convert_alpha()
         self.rpgImageL = pygame.transform.flip(self.rpgImageR, True, False)
         self.win = window
         self.terrain = terrain
-        self.hitbox = pygame.Rect(posX, posY + 26, 60, 24)
         
     def draw(self, x, y, direction):
+        if not self.onGround:
+            x += self.offsetX
+            y += self.offsetY
+        
         self.posX = x
         self.posY = y
         self.direction = direction
-        if direction:
-            self.win.blit(self.rpgImageR, (x, y + 26))
+        
+        if self.direction:
+            self.win.blit(self.rpgImageR, (self.posX, self.posY))
         else:
-            self.win.blit(self.rpgImageL, (x - 35, y + 26))
+            self.win.blit(self.rpgImageL, (self.posX - 35, self.posY))
     
     def shoot(self):
         if self.direction:
-            magicNum = 30
+            offsetX = 30
         else:
-            magicNum = -30
-        return RPGBullet(self.win, self.terrain, self.posX + magicNum, self.posY, self.direction, self.owner)
+            offsetX = -30
+            
+        return RPGBullet(self.win, self.terrain, self.posX + offsetX, self.posY, self.direction, self.owner)
         
