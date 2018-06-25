@@ -150,9 +150,10 @@ class RPGPellets:
         self.terrain = terrain
         self.terrainList = terrain.terrain
         self.startPosX = posX
+        self.theta = 360/(i+1)
         
-        self.speedY = -5 * m.sin(24 * i)
-        self.speedX = 5 * m.cos(24 * i)
+        self.speedY = -5 * m.sin(self.theta * i)
+        self.speedX = 5 * m.cos(self.theta * i)
         
         
 #         if self.speedX == 0:
@@ -239,7 +240,7 @@ class RPGBullet:
                 self.hitbox.x = self.posX
                     
                 def spawnPellets():
-                    for i in range(15):
+                    for i in range(60):
                         pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
                         self.pellets.append(pellet)
                     self.collided = True

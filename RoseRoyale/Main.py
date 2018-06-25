@@ -16,7 +16,7 @@ def Main(runServer):  # Main function, starts the entire game
     if runServer:
         setupServer(username)
         
-    setupServerConnection()
+    #asetupServerConnection()
     RoseRoyale.Game.initialize(username, cc)
     shutdown()
 
