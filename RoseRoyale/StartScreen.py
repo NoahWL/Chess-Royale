@@ -1,4 +1,7 @@
 import pygame
+from pygame.constants import MOUSEBUTTONDOWN
+from RoseRoyale.Main import Main
+from time import sleep
 
 pygame.init()
 
@@ -12,6 +15,7 @@ class Game:
 
 class Button:
     def __init__(self, size):
+        
         self.text = text
         self.size = size
         self.display = display
@@ -39,19 +43,26 @@ serverFormatted = "Host a Server"
 serverType = pygame.font.SysFont("Cooper Black", 45, 0, 0)
 serverDisplayText = serverType.render(serverFormatted, True, (255, 255, 255), (0, 0, 0))
 
+joinBox = pygame.Rect(75, 100, 280, 53)
+hostBox = pygame.Rect(660, 100, 310, 53)
+
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            
+        if event.type == MOUSEBUTTONDOWN:
+            click = event.pos
+            
+            if joinBox.collidepoint(click) or hostBox.collidepoint(click):
+                running = False
+    
     win.blit(titleDisplayText, (360, 50))
     win.blit(joinDisplayText, (75, 100))
     win.blit(serverDisplayText, (660, 100))
     pygame.display.update()
-
-
-
-
-pygame.close()
-win.getMouse()
+    
+sleep(1)    
+Main(False)
 
