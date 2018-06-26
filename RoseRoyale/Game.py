@@ -12,7 +12,8 @@ from RoseRoyale.Bullet import PistolBullet, RPGBullet, ShotgunBullet, SMGBullet
 from RoseRoyale.Terrain import Terrain
 from RoseRoyale.EndScreen import WinScreen, LoseScreen
 
-from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT
+from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT,\
+    MOUSEBUTTONDOWN
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
 
 # Various window surfaces
@@ -129,7 +130,29 @@ def initialize(username, ClientConnection):
                 pygame.display.quit()
                 pygame.quit()
                 return
+            
+            if event.type == MOUSEBUTTONDOWN:
                 
+                click = getMouseScaled()
+                
+                
+                if winscreen.restartBox.collidepoint(click):
+                    #do something
+                    shouldRun = False
+                    return
+                if winscreen.quitBox.collidepoint(click):
+                    #do something
+                    shouldRun = False
+                    return
+                if losescreen.restartBox.collidepoint(click):
+                    #do something
+                    shouldRun = False
+                    return
+                if losescreen.quitBox.collidepoint(click):
+                    #do something
+                    shouldRun = False
+                    return
+            
         keys = pygame.key.get_pressed()
         if keys[K_ESCAPE]:
             pygame.quit()
@@ -265,3 +288,4 @@ def getMouseScaled():
     m2 = pygame.mouse.get_pos()[1]
     m1 = m1 * (1920 / resolutionX)
     m2 = m2 * (1080 / resolutionY)
+    return(m1, m2)
