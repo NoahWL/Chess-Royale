@@ -14,12 +14,16 @@ class ClientConnection:
         
         self.username = username
         self.shouldRun = True
+        self.connectionManager = None
         print("Client connection starting...")
         
-    def connect(self):
-        IP = '127.0.0.1'
+    def connect(self, IP):
         connection = socket.socket()
-        connection.connect((IP, 2396))
+        try:
+            connection.connect((IP, 2396))
+        except socket.error:
+            print('Could not connect to that server.')
+            
         self.connectionManager = ConnectionManager(connection, self.username)
         self.connectionManager.start()
         
@@ -35,7 +39,7 @@ class ClientConnection:
         self.connectionManager.sendMessage(message)
         
     def handleMessage(self, message):
-        # print('handling:', message)
+        print('handling:', message)
         messageType = message[message.find('!type') + 5 : message.find('!/type')]  # Get message messageType
         
         if messageType == 'PLAYERPOSITION':
@@ -70,12 +74,13 @@ class ClientConnection:
             rg.spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner)
         
         elif messageType == 'STARTGAME':
-            rg.gameStarted = True
+            rg.startGame()
             
     def close(self):
         print('Disconnecting from server')
         self.shouldRun = False
-        self.connectionManager.close()
+        if self.connectionManager != None:
+            self.connectionManager.close()
         
     """Player action commands:"""
 

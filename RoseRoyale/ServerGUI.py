@@ -59,4 +59,4 @@ class ServerGUI:
             self.startButton(window)
             
             pygame.display.update()  # Update the display
-            clock.tick(30)
+            clock.tick(15)

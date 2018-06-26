@@ -15,6 +15,7 @@ import RoseRoyale.Game
 myServer = None
 serverGUI = None
 cc = None
+IP = '127.0.0.1'
 username = str(random.randint(1, 100))  # Temp - assign a random username
 
 
@@ -31,8 +32,9 @@ def Main(runServer):  # Main function, starts the entire game
 
 def setupServerConnection():
     global cc
+    global IP
     cc = ClientConnection(username)
-    connectionThread = Thread(target=cc.connect, args=())
+    connectionThread = Thread(target=cc.connect, args=(IP,))
     connectionThread.start()
 
 

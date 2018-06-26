@@ -221,6 +221,11 @@ def initialize(username, ClientConnection):
 """Server commands.  These can be called be the ClientConnection instance to update objects on the player's screen."""
 
 
+def startGame():
+    global gameStarted
+    gameStarted = True
+
+
 def updateMPPlayer(name, x, y, direction, weaponName):
     mpplayer = None
     for p in players:

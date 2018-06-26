@@ -89,7 +89,7 @@ class Server:
     # GUI commands
     def startGame(self):
         print('Starting game...')
-        message = '!typeSTARTGAME!/type'
+        message = '!typeSTARTGAME!/type !end'
         self.sendToAll(message, None)
 
 
