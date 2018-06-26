@@ -235,7 +235,7 @@ class RPGBullet:
                 self.hitbox.x = self.posX
                     
                 def spawnPellets():
-                    for i in range(360):
+                    for i in range(15):
                         pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
                         self.pellets.append(pellet)
                     self.collided = True

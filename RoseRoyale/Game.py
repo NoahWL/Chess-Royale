@@ -12,7 +12,7 @@ from RoseRoyale.Bullet import PistolBullet, RPGBullet, ShotgunBullet, SMGBullet
 from RoseRoyale.Terrain import Terrain
 from RoseRoyale.EndScreen import WinScreen, LoseScreen
 
-from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE
+from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
 
 players = []
@@ -64,6 +64,7 @@ def initialize(username, ClientConnection):
     posy = 0
     direction = True
     lastShot = 0
+    rpgTime = 2 # used for cheating
     
     r = pygame.rect.Rect((50, 50), (5, 5))
     while shouldRun:
@@ -114,6 +115,9 @@ def initialize(username, ClientConnection):
                 player.pickup(terrain)
                 lastShot = time.time()
         
+        if keys[K_RALT]:
+            rpgTime = 0
+        
         click = pygame.mouse.get_pressed()
             
         if click[0] == 1:
@@ -133,7 +137,7 @@ def initialize(username, ClientConnection):
                 spawnedBullet = player.getWeapon().shoot()
                 lastShot = time.time()
                 
-            elif time.time() - lastShot > 0 and weapon == 'RPG':
+            elif time.time() - lastShot > rpgTime and weapon == 'RPG':
                 spawnedBullet = player.getWeapon().shoot()
                 lastShot = time.time()
             
