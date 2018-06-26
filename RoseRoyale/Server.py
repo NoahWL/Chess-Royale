@@ -31,7 +31,7 @@ class Server:
             
     def handleMessage(self, message, client):
         messageType = message[message.find('!type') + 5 : message.find('!/type')]  # Get message type
-        print('Type:', messageType)
+        #print('Type:', messageType)
         if messageType == 'PLAYERPOSITION':
             self.sendToAll(message, client.name)  # Pass on the player position to all clients
         elif messageType == 'CLIENTNAME':
@@ -56,6 +56,8 @@ class Server:
         return None
         
     def sendToAll(self, message, ignore):
+        if ignore == None:
+            ignore = ''
         for c in self.clients:
             if c.name != ignore:
                 c.sendMessage(message)
@@ -83,6 +85,12 @@ class Server:
         self.shouldRun = False
         for ch in self.clients:
             ch.close()
+            
+    # GUI commands
+    def startGame(self):
+        print('Starting game...')
+        message = '!typeSTARTGAME!/type'
+        self.sendToAll(message, None)
 
 
 class ClientHandler:

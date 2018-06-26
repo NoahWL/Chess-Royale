@@ -15,31 +15,50 @@ from RoseRoyale.EndScreen import WinScreen, LoseScreen
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
 
-players = []
-window = None
-mainWin = None
+# Various window surfaces
+window = None  # This is drawn to and then scaled to the appropriate resolution
+mainWin = None  # Window is drawn to this.  It takes up the entire screen.
+winscreen = None  # Shown if the local player is the last one standing
+losescreen = None  # Shown if the player has been killed
 
 # Variables for resolution scaling.  Game is designed around 1920x1080 but objects and their positions will scale to available space.
 resolutionX = GetSystemMetrics(0)
 resolutionY = GetSystemMetrics(1)
-windowScaleX = 1
-windowScaleY = 1
 
-bullets = []  # List of bullets that need to be drawn, updated, collided with
-terrain = None  # Terrain object containing and managing all terrain that must be drawn
+# List of various objects/entities that must be drawn
+bullets = []  # List of bullets
+players = []  # List of players (including local)
+terrain = None  # Terrain class, contains list of terrain objects and players
+
+# Misc variables
+gameStarted = True  # True if the server has started the game
+
+
+# Check if an end screen should be drawn
+def drawEndScreen(player):
+    # Lose screen
+        if not player.alive:
+            losescreen.draw()
+    # Win screen
+        elif len(players) == 1 and gameStarted:
+            winscreen.draw()
 
 
 def initialize(username, ClientConnection):
+    # Variables that should be accessed anywhere in this module
+    global mainWin
+    global window
+    global terrain
+    global winscreen
+    global losescreen
+    global gameStarted
+    
     shouldRun = True
     
     # Pygame related setup
     pygame.display.init()
     
-    # os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
-    global mainWin
-    global window
-    global terrain
-    
+    # os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0" # Set game window to start at the top-left corner of the screen
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
     terrain = Terrain(window, players)
@@ -64,14 +83,32 @@ def initialize(username, ClientConnection):
     posy = 0
     direction = True
     lastShot = 0
-    rpgTime = 2 # used for cheating
+    rpgTime = 2  # RPG fire rate
     
-    r = pygame.rect.Rect((50, 50), (5, 5))
-    while shouldRun:
-        # Check if an end screen should be drawn
-        if not player.alive:
-            losescreen.draw()
+    # Wait for the server owner to start the game
+    while not gameStarted:
+        for event in pygame.event.get():
+            
+            if event.type == pygame.QUIT:
+                shouldRun = False
+                pygame.display.quit()
+                pygame.quit()
+                return
+                
+        keys = pygame.key.get_pressed()
+        if keys[K_ESCAPE]:
+            pygame.quit()
+            shouldRun = False
+            return
         
+        rect = pygame.rect.Rect(100, 100, 100, 100)
+        pygame.draw.rect(window, (255, 0, 0), rect)
+        mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
+        pygame.display.update()  # Update the display
+        clock.tick(60)  # Tick pygame's clock to keep 60FPS (TODO: Replace this jittery garbage)
+    
+    # Main game loop
+    while shouldRun:
         # Manage local player physics and controls
         if posx > 0:
             posx = posx - 1
@@ -120,7 +157,7 @@ def initialize(username, ClientConnection):
         
         click = pygame.mouse.get_pressed()
             
-        if click[0] == 1:
+        if click[0] == 1 and player.alive:
             weapon = player.weaponName
             spawnedBullet = None
             
@@ -147,26 +184,34 @@ def initialize(username, ClientConnection):
                 if spawnedBullet.name != 'ShotgunBullet':
                     bullets.append(spawnedBullet)
 
-        # Draw background, terrain (platforms, guns on ground, etc.)
+        # 1 - Draw background, terrain (platforms, guns on ground, etc.)
         window.blit(tempBack, (0, 0))
         terrain.draw()
         
-        # Draw players
+        # 2 - Draw players
         for p in players:
+            if not p.alive:
+                players.remove(p)
+            
             if p.isLocal:
                 p.move(posx, posy, direction)
             else:
                 p.draw()
         
-        # Draw bullets
+        # 3 - Draw bullets
         for bullet in bullets:
             if not bullet.drawBullet():
                 bullets.remove(bullet)
+                
+        # 4 - Draw terrain that should appear on top of the player
         terrain.drawAfter()
         
-        mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))
-        pygame.display.update()
-        clock.tick(60)
+        # 5 - Draw an end screen if required
+        drawEndScreen(player)
+        
+        mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
+        pygame.display.update()  # Update the display
+        clock.tick(60)  # Tick pygame's clock to keep 60FPS (TODO: Replace this garbage)
         
     # Runs on window close
     pygame.display.quit()
@@ -208,6 +253,7 @@ def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
         bullets.append(ShotgunBullet(window, terrain, bulletX, bulletY, 2, bulletDirection, owner))
          
     bullets.append(bullet)
+
 
 def getMouseScaled():
     m1 = pygame.mouse.get_pos()[0]

@@ -68,6 +68,9 @@ class ClientConnection:
                 bulletDirection = False
             
             rg.spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner)
+        
+        elif messageType == 'STARTGAME':
+            rg.gameStarted = True
             
     def close(self):
         print('Disconnecting from server')
@@ -127,7 +130,6 @@ class ServerListener(Thread):
     def run(self):
         while self.manager.shouldRun:
             buffer = ''
-            # print('serverlistener')
             received = self.connection.recv(2048)
             buffer += received.decode('utf-8')
             if buffer != '':
@@ -155,9 +157,7 @@ class ServerWriter(Thread):
         self.connection.sendall(nameInfo.encode("utf-8"))
         print('Sent client name')
         while self.manager.shouldRun:
-            # print('serverwriter')
             if len(self.messages) > 0:
-                # print("Writing message: " + self.messages[0])
                 self.connection.sendall(self.messages[0].encode("utf-8"))
                 del self.messages[0]
             time.sleep(0.001)

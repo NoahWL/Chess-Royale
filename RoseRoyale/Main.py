@@ -1,23 +1,31 @@
 """The main module.  This starts the game and client connection or a server."""
 
-from RoseRoyale.Server import Server
-from RoseRoyale.ClientConnection import ClientConnection
-from threading import Thread
-import RoseRoyale.Game
+import os
 import time
 import random
 
+from RoseRoyale.Server import Server
+from RoseRoyale.ClientConnection import ClientConnection
+from RoseRoyale.ServerGUI import ServerGUI
+from RoseRoyale import StartScreen
+
+from threading import Thread
+import RoseRoyale.Game
+
 myServer = None
+serverGUI = None
 cc = None
 username = str(random.randint(1, 100))  # Temp - assign a random username
 
 
 def Main(runServer):  # Main function, starts the entire game
     if runServer:
-        setupServer(username)
+        setupServer()
+        serverGUI.startGUI()
+    else:
+        #setupServerConnection()
+        RoseRoyale.Game.initialize(username, cc)
         
-    #setupServerConnection()
-    RoseRoyale.Game.initialize(username, cc)
     shutdown()
 
 
@@ -28,15 +36,20 @@ def setupServerConnection():
     connectionThread.start()
 
 
-def setupServer(serverName):
+def setupServer():
     # Create a server instance
     global myServer
-    myServer = Server(serverName)
+    global serverGUI
+    
     # Start the instantiated server in its own thread
+    myServer = Server(username)
     serverThread = Thread(target=myServer.initialize, args=())
     serverThread.start()
-
     
+    # Create server GUI
+    serverGUI = ServerGUI(myServer)
+
+
 def shutdown():
     print('Shutting down')
     if cc != None:
@@ -44,10 +57,13 @@ def shutdown():
     
     if myServer != None:
         myServer.close()
-        
-    # time.sleep(0.5)  # Allow some time for all threads to close cleanly
-    # os._exit(0)  # Ensure all threads are closed (unclean but works for now)
+        time.sleep(0.5)  # Allow some time for all threads to close cleanly
+        os._exit(0)  # Ensure all threads are closed
 
 
 if __name__ == "__main__":
-   Main(False)
+    Selected = StartScreen.waitOnStart()
+    if Selected == None:
+        pass
+    else:
+        Main(Selected)
