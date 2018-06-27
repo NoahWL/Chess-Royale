@@ -161,17 +161,27 @@ class RPGPellets:
         self.terrain = terrain
         self.terrainList = terrain.terrain
         self.startPosX = posX
+<<<<<<< HEAD
         self.theta = 360 / (i + 1)  # Finds angle to increment around a circle by
         
         self.speedY = -5 * m.sin(self.theta * i)  # Sets up X and Y velocities based on points around a 5 unit radius circle
+=======
+        self.theta = 360/(i+1)
+        
+        self.speedY = -5 * m.sin(self.theta * i)
+>>>>>>> parent of 757a475... Changed amount of rpg pellets, more comments
         self.speedX = 5 * m.cos(self.theta * i)
         
-        self.damage = 10
+        self.damage = 5
         self.bounce = 0
         
         self.posX = posX
         self.posY = posY
+<<<<<<< HEAD
         self.bullet = pygame.image.load(resource_path('assets/shotgunBullet.png')).convert_alpha()  # Just re-used the shotgun bullet png
+=======
+        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha()
+>>>>>>> parent of 757a475... Changed amount of rpg pellets, more comments
         self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         
     def drawBullet(self):
@@ -190,7 +200,11 @@ class RPGPellets:
                 self.speedX = -self.speedX
                 self.speedY = -self.speedY
                 
+<<<<<<< HEAD
                 if self.bounce == 1:  # Sets the number of bounces allowed, with 1 being no bounces.
+=======
+                if self.bounce == 1:
+>>>>>>> parent of 757a475... Changed amount of rpg pellets, more comments
                     self.hitbox = None
                     return False
                 return True
@@ -210,7 +224,11 @@ class RPGBullet:
         self.direction = direction
         self.win = window
         self.terrain = terrain
+<<<<<<< HEAD
         self.terrainList = terrain.terrain  # Calls the list of terrain in terrain
+=======
+        self.terrainList = terrain.terrain
+>>>>>>> parent of 757a475... Changed amount of rpg pellets, more comments
         self.startPosX = posX
         
         self.speed = 10
@@ -246,9 +264,15 @@ class RPGBullet:
                 self.hitbox.x = self.posX
                     
                 def spawnPellets():
+<<<<<<< HEAD
                     for i in range(30):  # Draws number of bullets equal to range
                         pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
                         self.pellets.append(pellet)  # Adds pellets to list of pellets
+=======
+                    for i in range(15):
+                        pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
+                        self.pellets.append(pellet)
+>>>>>>> parent of 757a475... Changed amount of rpg pellets, more comments
                     self.collided = True
                     
                 if checkTerrainCollision(self, self.terrainList) or checkPlayerCollision(self, self.terrain.players):
