@@ -147,17 +147,17 @@ class RPGPellets:
         self.terrain = terrain
         self.terrainList = terrain.terrain
         self.startPosX = posX
-        self.theta = 360/(i+1)
+        self.theta = 360/(i+1) # Finds angle to increment around a circle by
         
-        self.speedY = -5 * m.sin(self.theta * i)
+        self.speedY = -5 * m.sin(self.theta * i) # Sets up X and Y velocities based on points around a 5 unit radius circle
         self.speedX = 5 * m.cos(self.theta * i)
         
-        self.damage = 5
+        self.damage = 10
         self.bounce = 0
         
         self.posX = posX
         self.posY = posY
-        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha()
+        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha() # Just re-used the shotgun bullet png
         self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         
     def drawBullet(self):
@@ -176,7 +176,7 @@ class RPGPellets:
                 self.speedX = -self.speedX
                 self.speedY = -self.speedY
                 
-                if self.bounce == 1:
+                if self.bounce == 1: # Sets the number of bounces allowed, with 1 being no bounces.
                     self.hitbox = None
                     return False
                 return True
@@ -196,7 +196,7 @@ class RPGBullet:
         self.direction = direction
         self.win = window
         self.terrain = terrain
-        self.terrainList = terrain.terrain
+        self.terrainList = terrain.terrain # Calls the list of terrain in terrain
         self.startPosX = posX
         
         self.speed = 10
@@ -232,9 +232,9 @@ class RPGBullet:
                 self.hitbox.x = self.posX
                     
                 def spawnPellets():
-                    for i in range(15):
+                    for i in range(30): # Draws number of bullets equal to range
                         pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
-                        self.pellets.append(pellet)
+                        self.pellets.append(pellet) # Adds pellets to list of pellets
                     self.collided = True
                     
                 if checkTerrainCollision(self, self.terrainList) or checkPlayerCollision(self, self.terrain.players):
