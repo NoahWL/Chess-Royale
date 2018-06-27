@@ -1,5 +1,4 @@
 import pygame
-import random
 import math as m
 
 
@@ -30,26 +29,26 @@ class PistolBullet:
         self.name = 'PistolBullet'
         self.owner = owner
         self.win = window
-        self.direction = direction
+        self.direction = direction # Direction of the bullet, either left or right
         self.terrain = terrain
         self.terrainList = terrain.terrain
-        self.startPosX = posX
+        self.startPosX = posX # Used for reference when calculating how far the bullet travels
         
         self.speed = 10
-        self.damage = 25
+        self.damage = 25 
         
         self.posX = posX
         self.posY = posY
         self.bulletR = pygame.image.load("bullet.png").convert_alpha()
         self.bulletL = pygame.transform.flip(self.bulletR, True, False)
-        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)
+        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10) # The numbers added make sure the hitbox is in the right position
         
     def drawBullet(self):
         
-        if abs(self.startPosX - self.posX) < 1800:
+        if abs(self.startPosX - self.posX) < 1800: # Stops drawing the bullet if it travels too far
             if self.direction:
                 self.posX += self.speed
-                self.win.blit(self.bulletR, (self.posX + 30, self.posY + 20))
+                self.win.blit(self.bulletR, (self.posX + 30, self.posY + 20)) # The numbers added make sure the bullet is in the right position
             else:
                 self.posX -= self.speed
                 self.win.blit(self.bulletL, (self.posX - 38, self.posY + 20))
@@ -70,10 +69,8 @@ class SMGBullet:
         self.terrain = terrain
         self.terrainList = terrain.terrain
         self.startPosX = posX
-        
         self.speed = 10
         self.damage = 15
-        
         self.posX = posX
         self.posY = posY
         self.bullet = pygame.image.load("smgBullet.png").convert_alpha()
@@ -110,7 +107,7 @@ class ShotgunBullet:
         self.speedX = 10
         self.speedY = 2
         self.damage = 50
-        self.pyState = pyState
+        self.pyState = pyState # Stands for position Y state. Based on the number incremented in the for loop to make these 3 bullets.
         
         self.posX = posX
         self.posY = posY

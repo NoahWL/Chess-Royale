@@ -152,7 +152,7 @@ def initialize(username, ClientConnection):
                     #do something
                     shouldRun = False
                     return
-            
+        # checks for key presses    
         keys = pygame.key.get_pressed()
         if keys[K_ESCAPE]:
             pygame.quit()
@@ -174,7 +174,7 @@ def initialize(username, ClientConnection):
             if time.time() - lastShot > 0.10:
                 player.pickup(terrain)
                 lastShot = time.time()
-        
+        # makes the RPG fire time 0 (a cheat)
         if keys[K_RALT]:
             rpgTime = 0
         
