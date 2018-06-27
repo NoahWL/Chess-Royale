@@ -63,18 +63,14 @@ class Server:
                 c.sendMessage(message)
         
     def ConnectionListener(self):
-        print("connection listener started")
         serverSocket = socket.socket()
-        print("socket created")
-        serverSocket.bind(("127.0.0.1", 2396))
-        print("socket bound")
+        serverSocket.bind(('', 2396))
         serverSocket.listen(5)
-        print("socket listening")
         
         while self.shouldRun:
-            print("waiting for clients")
+            print("Waiting for clients")
             clientConnection, addressInfo = serverSocket.accept()
-            print("connection requested")
+            print("Connection requested")
             cHandler = ClientHandler(self, clientConnection)
             cHandler.start()
             self.clients.append(cHandler)

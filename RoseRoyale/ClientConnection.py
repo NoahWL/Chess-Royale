@@ -23,6 +23,7 @@ class ClientConnection:
             connection.connect((IP, 2396))
         except socket.error:
             print('Could not connect to that server.')
+            return
             
         self.connectionManager = ConnectionManager(connection, self.username)
         self.connectionManager.start()

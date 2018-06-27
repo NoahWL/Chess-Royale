@@ -15,24 +15,22 @@ import RoseRoyale.Game
 myServer = None
 serverGUI = None
 cc = None
-IP = '127.0.0.1'
 username = str(random.randint(1, 100))  # Temp - assign a random username
 
 
-def Main(runServer):  # Main function, starts the entire game
+def Main(runServer, IP):  # Main function, starts the entire game
     if runServer:
         setupServer()
         serverGUI.startGUI()
     else:
-        #setupServerConnection()
+        setupServerConnection(IP)
         RoseRoyale.Game.initialize(username, cc)
         
     shutdown()
 
 
-def setupServerConnection():
+def setupServerConnection(IP):
     global cc
-    global IP
     cc = ClientConnection(username)
     connectionThread = Thread(target=cc.connect, args=(IP,))
     connectionThread.start()
@@ -68,4 +66,4 @@ if __name__ == "__main__":
     if Selected == None:
         pass
     else:
-        Main(Selected)
+        Main(Selected, StartScreen.ipText)

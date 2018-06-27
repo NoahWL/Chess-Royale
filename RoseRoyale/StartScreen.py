@@ -49,7 +49,8 @@ joinBox = pygame.Rect(75, 100, 280, 53)
 hostBox = pygame.Rect(660, 100, 310, 53)
 
 ipText = ''
-ipBox = basicFont.render(ipText, True, (255, 255, 255), (0, 0, 0))
+ipFont = basicFont = pygame.font.SysFont('Times New Roman', 36)
+ipBox = basicFont.render('Enter IP Address', True, (0, 0, 0), (255, 255, 255))
 
 
 def updateTextBox(key):
@@ -57,7 +58,7 @@ def updateTextBox(key):
     global ipBox
     
     if len(ipText) > 15:
-        return
+        ipText = ipText[0:len(ipText)-1]
     
     if key == K_1:
         ipText += '1'
@@ -83,8 +84,11 @@ def updateTextBox(key):
         ipText += '.'
     elif key == K_BACKSPACE or key == K_DELETE:
         ipText = ipText[0:len(ipText)-1]
-        
-    ipBox = basicFont.render(ipText, True, (255, 255, 255), (0, 0, 0))
+    
+    if len(ipText) <= 0:
+        ipBox = basicFont.render('Enter IP Address', True, (0, 0, 0), (255, 255, 255))
+    else:
+        ipBox = basicFont.render(ipText, True, (0, 0, 0), (255, 255, 255))
 def waitOnStart():
     running = True
     selected = None
@@ -111,7 +115,7 @@ def waitOnStart():
         win.blit(titleDisplayText, (360, 50))
         win.blit(joinDisplayText, (75, 100))
         win.blit(serverDisplayText, (660, 100))
-        win.blit(ipBox, (360, 150))
+        win.blit(ipBox, (350, 150))
         pygame.display.update()
         
     return selected

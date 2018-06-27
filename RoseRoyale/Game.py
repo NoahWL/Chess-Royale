@@ -32,7 +32,7 @@ players = []  # List of players (including local)
 terrain = None  # Terrain class, contains list of terrain objects and players
 
 # Misc variables
-gameStarted = True  # True if the server has started the game
+gameStarted = False  # True if the server has started the game
 
 
 # Check if an end screen should be drawn
@@ -59,18 +59,19 @@ def initialize(username, ClientConnection):
     # Pygame related setup
     pygame.display.init()
     
-    # os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0" # Set game window to start at the top-left corner of the screen
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0" # Set game window to start at the top-left corner of the screen
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
     terrain = Terrain(window, players)
-    # mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN | pygame.HWACCEL, 16)
-    mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
+    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN, 16)
+    #mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
     clock = pygame.time.Clock()
     
-    tempBack = pygame.image.load("chessBackground.jpg").convert()
+    tempBack = pygame.image.load('chessBackground.jpg').convert()
+    waitingScreen = pygame.image.load('waitingPlayers.png').convert_alpha()
     
     # End screen setup
     winscreen = WinScreen(window)
@@ -102,11 +103,12 @@ def initialize(username, ClientConnection):
             shouldRun = False
             return
         
-        rect = pygame.rect.Rect(100, 100, 100, 100)
-        pygame.draw.rect(window, (255, 0, 0), rect)
+        backgroundRect = pygame.rect.Rect(0, 0, 1920, 1080)
+        pygame.draw.rect(window, (0, 100, 100), backgroundRect)
+        window.blit(waitingScreen, (706, 471)) # Draw waiting image in center of screen
         mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
         pygame.display.update()  # Update the display
-        clock.tick(60)  # Tick pygame's clock to keep 60FPS (TODO: Replace this jittery garbage)
+        clock.tick(15)  # Tick pygame's clock to keep 60FPS (TODO: Replace this jittery garbage)
     
     # Main game loop
     while shouldRun:
