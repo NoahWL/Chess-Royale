@@ -261,3 +261,6 @@ __pycache__/
 *.pyc
 .pydevproject
 .project
+build/
+dist/
+Main.spec

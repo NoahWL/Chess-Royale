@@ -1,7 +1,21 @@
+import os
+import sys
+
 import pygame
 
 import RoseRoyale.Game
 from RoseRoyale.Gun import Shotgun, RPG, SMG
+
+
+def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # @UndefinedVariable
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class Terrain:
@@ -14,11 +28,11 @@ class Terrain:
     def setup(self):
         
         # Platforms - Textures
-        self.grassPlatform = pygame.image.load("grassPlatform.png").convert_alpha(self.win)
-        self.floor = pygame.image.load("floorTile.png").convert_alpha(self.win)       
-        self.upsidedownGrass = pygame.image.load("upsidedownGrass.png").convert_alpha(self.win)
-        self.grassPlatformLeftSide = pygame.image.load("grassPlatformLeftSide.png").convert_alpha(self.win)
-        self.grassPlatformRightSide = pygame.image.load("grassPlatformRightSide.png").convert_alpha(self.win)
+        self.grassPlatform = pygame.image.load(resource_path('assets/grassPlatform.png')).convert_alpha(self.win)
+        self.floor = pygame.image.load(resource_path('assets/floorTile.png')).convert_alpha(self.win)       
+        self.upsidedownGrass = pygame.image.load(resource_path('assets/upsidedownGrass.png')).convert_alpha(self.win)
+        self.grassPlatformLeftSide = pygame.image.load(resource_path('assets/grassPlatformLeftSide.png')).convert_alpha(self.win)
+        self.grassPlatformRightSide = pygame.image.load(resource_path('assets/grassPlatformRightSide.png')).convert_alpha(self.win)
         
         # Platforms - Hitboxes
         floor = pygame.Rect(0, 1070, 1920, 10)

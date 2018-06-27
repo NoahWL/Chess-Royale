@@ -1,9 +1,24 @@
 import time
+import os
+import sys
 
 import pygame
 from pygame.constants import K_ESCAPE
 
+
+def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # @UndefinedVariable
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 lastClick = 0
+
 
 class ServerGUI:
 
@@ -14,7 +29,7 @@ class ServerGUI:
     
     def setupObjects(self):
         self.startGameRect = pygame.rect.Rect(106, 78, 300, 100)
-        self.startImage = pygame.image.load("start.png").convert_alpha()
+        self.startImage = pygame.image.load(resource_path('assets/start.png')).convert_alpha()
     
     def stop(self):
         self.shouldRun = False

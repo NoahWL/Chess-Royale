@@ -1,5 +1,19 @@
+import os
+import sys
+
 import pygame
 import math as m
+
+
+def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # @UndefinedVariable
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def checkPlayerCollision(bullet, players):
@@ -29,26 +43,26 @@ class PistolBullet:
         self.name = 'PistolBullet'
         self.owner = owner
         self.win = window
-        self.direction = direction # Direction of the bullet, either left or right
+        self.direction = direction  # Direction of the bullet, either left or right
         self.terrain = terrain
         self.terrainList = terrain.terrain
-        self.startPosX = posX # Used for reference when calculating how far the bullet travels
+        self.startPosX = posX  # Used for reference when calculating how far the bullet travels
         
         self.speed = 10
         self.damage = 25 
         
         self.posX = posX
         self.posY = posY
-        self.bulletR = pygame.image.load("bullet.png").convert_alpha()
+        self.bulletR = pygame.image.load(resource_path('assets/bullet.png')).convert_alpha()
         self.bulletL = pygame.transform.flip(self.bulletR, True, False)
-        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10) # The numbers added make sure the hitbox is in the right position
+        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)  # The numbers added make sure the hitbox is in the right position
         
     def drawBullet(self):
         
-        if abs(self.startPosX - self.posX) < 1800: # Stops drawing the bullet if it travels too far
+        if abs(self.startPosX - self.posX) < 1800:  # Stops drawing the bullet if it travels too far
             if self.direction:
                 self.posX += self.speed
-                self.win.blit(self.bulletR, (self.posX + 30, self.posY + 20)) # The numbers added make sure the bullet is in the right position
+                self.win.blit(self.bulletR, (self.posX + 30, self.posY + 20))  # The numbers added make sure the bullet is in the right position
             else:
                 self.posX -= self.speed
                 self.win.blit(self.bulletL, (self.posX - 38, self.posY + 20))
@@ -73,7 +87,7 @@ class SMGBullet:
         self.damage = 15
         self.posX = posX
         self.posY = posY
-        self.bullet = pygame.image.load("smgBullet.png").convert_alpha()
+        self.bullet = pygame.image.load(resource_path('assets/smgBullet.png')).convert_alpha()
         self.hitbox = pygame.Rect(self.posX, self.posY, 20, 20)
         
     def drawBullet(self):
@@ -107,11 +121,11 @@ class ShotgunBullet:
         self.speedX = 10
         self.speedY = 2
         self.damage = 50
-        self.pyState = pyState # Stands for position Y state. Based on the number incremented in the for loop to make these 3 bullets.
+        self.pyState = pyState  # Stands for position Y state. Based on the number incremented in the for loop to make these 3 bullets.
         
         self.posX = posX
         self.posY = posY
-        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha()
+        self.bullet = pygame.image.load(resource_path('assets/shotgunBullet.png')).convert_alpha()
         self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         
     def drawBullet(self):
@@ -147,9 +161,9 @@ class RPGPellets:
         self.terrain = terrain
         self.terrainList = terrain.terrain
         self.startPosX = posX
-        self.theta = 360/(i+1) # Finds angle to increment around a circle by
+        self.theta = 360 / (i + 1)  # Finds angle to increment around a circle by
         
-        self.speedY = -5 * m.sin(self.theta * i) # Sets up X and Y velocities based on points around a 5 unit radius circle
+        self.speedY = -5 * m.sin(self.theta * i)  # Sets up X and Y velocities based on points around a 5 unit radius circle
         self.speedX = 5 * m.cos(self.theta * i)
         
         self.damage = 10
@@ -157,7 +171,7 @@ class RPGPellets:
         
         self.posX = posX
         self.posY = posY
-        self.bullet = pygame.image.load("shotgunBullet.png").convert_alpha() # Just re-used the shotgun bullet png
+        self.bullet = pygame.image.load(resource_path('assets/shotgunBullet.png')).convert_alpha()  # Just re-used the shotgun bullet png
         self.hitbox = pygame.Rect(self.posX - 10, self.posY + 15, 22, 22)
         
     def drawBullet(self):
@@ -176,7 +190,7 @@ class RPGPellets:
                 self.speedX = -self.speedX
                 self.speedY = -self.speedY
                 
-                if self.bounce == 1: # Sets the number of bounces allowed, with 1 being no bounces.
+                if self.bounce == 1:  # Sets the number of bounces allowed, with 1 being no bounces.
                     self.hitbox = None
                     return False
                 return True
@@ -196,7 +210,7 @@ class RPGBullet:
         self.direction = direction
         self.win = window
         self.terrain = terrain
-        self.terrainList = terrain.terrain # Calls the list of terrain in terrain
+        self.terrainList = terrain.terrain  # Calls the list of terrain in terrain
         self.startPosX = posX
         
         self.speed = 10
@@ -206,7 +220,7 @@ class RPGBullet:
         
         self.posX = posX
         self.posY = posY
-        self.rpgBulletR = pygame.image.load("rpgBullet.png").convert_alpha()
+        self.rpgBulletR = pygame.image.load(resource_path('assets/rpgBullet.png')).convert_alpha()
         self.rpgBulletL = pygame.transform.flip(self.rpgBulletR, True, False)
         self.hitbox = pygame.Rect(self.posX, self.posY, 32, 15)
 
@@ -232,9 +246,9 @@ class RPGBullet:
                 self.hitbox.x = self.posX
                     
                 def spawnPellets():
-                    for i in range(30): # Draws number of bullets equal to range
+                    for i in range(30):  # Draws number of bullets equal to range
                         pellet = RPGPellets(self.win, self.terrain, self.posX + pelletOffset, self.posY, self.owner, i)
-                        self.pellets.append(pellet) # Adds pellets to list of pellets
+                        self.pellets.append(pellet)  # Adds pellets to list of pellets
                     self.collided = True
                     
                 if checkTerrainCollision(self, self.terrainList) or checkPlayerCollision(self, self.terrain.players):

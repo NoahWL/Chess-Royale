@@ -1,16 +1,16 @@
 """The main module.  This starts the game and client connection or a server."""
 
 import os
-import time
 import random
-
-from RoseRoyale.Server import Server
-from RoseRoyale.ClientConnection import ClientConnection
-from RoseRoyale.ServerGUI import ServerGUI
-from RoseRoyale import StartScreen
-
+import sys
 from threading import Thread
+import time
+
+from RoseRoyale import StartScreen
+from RoseRoyale.ClientConnection import ClientConnection
 import RoseRoyale.Game
+from RoseRoyale.Server import Server
+from RoseRoyale.ServerGUI import ServerGUI
 
 myServer = None
 serverGUI = None
@@ -62,6 +62,9 @@ def shutdown():
 
 
 if __name__ == "__main__":
+    if getattr(sys, 'frozen', False):
+        os.chdir(sys._MEIPASS)  # @UndefinedVariable
+    
     Selected = StartScreen.waitOnStart()
     if Selected == None:
         pass

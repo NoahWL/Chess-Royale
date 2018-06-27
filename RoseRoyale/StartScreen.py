@@ -1,10 +1,23 @@
 from time import sleep
-
+import os
+import sys
 import pygame
 from pygame.constants import MOUSEBUTTONDOWN, KEYDOWN, K_1, K_2, K_3, K_4, K_5, \
     K_6, K_7, K_8, K_9, K_0, K_PERIOD, K_BACKSPACE, K_DELETE
 
 from RoseRoyale.Main import Main
+
+
+def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # @UndefinedVariable
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 pygame.init()
 
@@ -31,10 +44,10 @@ class Button:
       
 
 win = pygame.display.set_mode((1024, 1024))
-background = pygame.image.load('chessfigures.jpg').convert()
+background = pygame.image.load(resource_path('assets/chessfigures.jpg')).convert()
 win.blit(background, (0, 0))
 
-basicFont = pygame.font.SysFont("Cooper Black", 45, 0, 0)
+basicFont = pygame.font.SysFont('Sans', 45, 0, 0)
 
 titleFormatted = "Chess Royale"
 titleDisplayText = basicFont.render(titleFormatted, True, (255, 255, 255), (0, 0, 0))
@@ -49,7 +62,7 @@ joinBox = pygame.Rect(75, 100, 280, 53)
 hostBox = pygame.Rect(660, 100, 310, 53)
 
 ipText = ''
-ipFont = basicFont = pygame.font.SysFont('Times New Roman', 36)
+ipFont = basicFont = pygame.font.SysFont('Sans', 36)
 ipBox = basicFont.render('Enter IP Address', True, (0, 0, 0), (255, 255, 255))
 
 
@@ -58,7 +71,7 @@ def updateTextBox(key):
     global ipBox
     
     if len(ipText) > 15:
-        ipText = ipText[0:len(ipText)-1]
+        ipText = ipText[0:len(ipText) - 1]
     
     if key == K_1:
         ipText += '1'
@@ -83,12 +96,14 @@ def updateTextBox(key):
     elif key == K_PERIOD:
         ipText += '.'
     elif key == K_BACKSPACE or key == K_DELETE:
-        ipText = ipText[0:len(ipText)-1]
+        ipText = ipText[0:len(ipText) - 1]
     
     if len(ipText) <= 0:
         ipBox = basicFont.render('Enter IP Address', True, (0, 0, 0), (255, 255, 255))
     else:
         ipBox = basicFont.render(ipText, True, (0, 0, 0), (255, 255, 255))
+
+
 def waitOnStart():
     running = True
     selected = None

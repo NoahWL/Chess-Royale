@@ -1,6 +1,19 @@
+import os
+import sys
 import pygame
 
 from RoseRoyale.Gun import Pistol, RPG, SMG, Shotgun
+
+
+def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # @UndefinedVariable
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 class MPPlayer:
@@ -15,8 +28,8 @@ class MPPlayer:
         
         self.posX = posX
         self.posY = posY
-        self.pTextureR = pygame.image.load('chess_piece_right.png').convert_alpha()
-        self.pTextureL = pygame.image.load('chess_piece_left.png').convert_alpha()
+        self.pTextureR = pygame.image.load(resource_path('assets/chess_piece_right.png')).convert_alpha()
+        self.pTextureL = pygame.image.load(resource_path('assets/chess_piece_left.png')).convert_alpha()
         self.hitbox = pygame.Rect(posX, posY, 45, 104)
         
         self.alive = True

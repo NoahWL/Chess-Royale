@@ -12,9 +12,21 @@ from RoseRoyale.Bullet import PistolBullet, RPGBullet, ShotgunBullet, SMGBullet
 from RoseRoyale.Terrain import Terrain
 from RoseRoyale.EndScreen import WinScreen, LoseScreen
 
-from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT,\
+from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT, \
     MOUSEBUTTONDOWN
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_e
+
+
+def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS  # @UndefinedVariable
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 # Various window surfaces
 window = None  # This is drawn to and then scaled to the appropriate resolution
@@ -59,19 +71,19 @@ def initialize(username, ClientConnection):
     # Pygame related setup
     pygame.display.init()
     
-    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0" # Set game window to start at the top-left corner of the screen
+    os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"  # Set game window to start at the top-left corner of the screen
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
     terrain = Terrain(window, players)
     mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN, 16)
-    #mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
+    # mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
     
     pygame.display.set_caption('Rose Royale')
     pygame.key.set_repeat(1, 0)
     clock = pygame.time.Clock()
     
-    tempBack = pygame.image.load('chessBackground.jpg').convert()
-    waitingScreen = pygame.image.load('waitingPlayers.png').convert_alpha()
+    tempBack = pygame.image.load(resource_path('assets/chessBackground.jpg')).convert()
+    waitingScreen = pygame.image.load(resource_path('assets/waitingPlayers.png')).convert_alpha()
     
     # End screen setup
     winscreen = WinScreen(window)
@@ -105,7 +117,7 @@ def initialize(username, ClientConnection):
         
         backgroundRect = pygame.rect.Rect(0, 0, 1920, 1080)
         pygame.draw.rect(window, (0, 100, 100), backgroundRect)
-        window.blit(waitingScreen, (706, 471)) # Draw waiting image in center of screen
+        window.blit(waitingScreen, (706, 471))  # Draw waiting image in center of screen
         mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
         pygame.display.update()  # Update the display
         clock.tick(15)  # Tick pygame's clock to keep 60FPS (TODO: Replace this jittery garbage)
@@ -137,21 +149,20 @@ def initialize(username, ClientConnection):
                 
                 click = getMouseScaled()
                 
-                
                 if winscreen.restartBox.collidepoint(click):
-                    #do something
+                    # do something
                     shouldRun = False
                     return
                 if winscreen.quitBox.collidepoint(click):
-                    #do something
+                    # do something
                     shouldRun = False
                     return
                 if losescreen.restartBox.collidepoint(click):
-                    #do something
+                    # do something
                     shouldRun = False
                     return
                 if losescreen.quitBox.collidepoint(click):
-                    #do something
+                    # do something
                     shouldRun = False
                     return
         # checks for key presses    
