@@ -24,7 +24,7 @@ class Server:
                 if messages != None:
                     for message in messages:
                         self.handleMessage(message, client)
-            time.sleep(0.001)
+            time.sleep(0)
         
         for client in self.clients:
             client.close()
@@ -132,13 +132,13 @@ class ClientListener(Thread):
         while self.theHandler.shouldRun:
             buffer = ''  # TODO: Implement the buffer correctly
             # print('clientlistener')
-            received = self.connection.recv(2048)
+            received = self.connection.recv(1024)
             buffer += received.decode('utf-8')
             if buffer != '':
                 self.receivedMessages.append(buffer[0:buffer.find("!end")])
                 # print('b', buffer[0:buffer.find("!end")])
                 # print('b2', buffer)
-            time.sleep(0.001)
+            time.sleep(0)
 
         
 class ClientWriter(Thread):
@@ -158,7 +158,7 @@ class ClientWriter(Thread):
                 # print("Writing message: " + self.messages[0])
                 self.connection.sendall(self.messages[0].encode("utf-8"))
                 del self.messages[0]
-            time.sleep(0.001)
+            time.sleep(0)
                 
     def sendMessage(self, message):
         self.messages.append(message)

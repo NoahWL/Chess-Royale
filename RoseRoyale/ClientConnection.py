@@ -34,7 +34,7 @@ class ClientConnection:
                 for message in messages:
                     # print("Message from server:" + message)
                     self.handleMessage(message)
-            time.sleep(0.001)
+            time.sleep(0)
     
     def _sendMessage(self, message):
         self.connectionManager.sendMessage(message)
@@ -136,11 +136,11 @@ class ServerListener(Thread):
     def run(self):
         while self.manager.shouldRun:
             buffer = ''
-            received = self.connection.recv(2048)
+            received = self.connection.recv(1024)
             buffer += received.decode('utf-8')
             if buffer != '':
                 self.receivedMessages.append(buffer[0 : buffer.find("!end")])
-            time.sleep(0.001)
+            time.sleep(0)
     
     def getMessages(self):
         messages = self.receivedMessages.copy()

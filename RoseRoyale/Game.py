@@ -99,28 +99,31 @@ def initialize(username, ClientConnection):
     lastShot = 0
     rpgTime = 2  # RPG fire rate
     
-    # Wait for the server owner to start the game
-    while not gameStarted:
-        for event in pygame.event.get():
-            
-            if event.type == pygame.QUIT:
-                shouldRun = False
-                pygame.display.quit()
-                pygame.quit()
-                return
+    def waitForStart():
+        # Wait for the server owner to start the game
+        while not gameStarted:
+            for event in pygame.event.get():
                 
-        keys = pygame.key.get_pressed()
-        if keys[K_ESCAPE]:
-            pygame.quit()
-            shouldRun = False
-            return
+                if event.type == pygame.QUIT:
+                    shouldRun = False
+                    pygame.display.quit()
+                    pygame.quit()
+                    return
+                    
+            keys = pygame.key.get_pressed()
+            if keys[K_ESCAPE]:
+                pygame.quit()
+                shouldRun = False
+                return
         
-        backgroundRect = pygame.rect.Rect(0, 0, 1920, 1080)
-        pygame.draw.rect(window, (0, 100, 100), backgroundRect)
-        window.blit(waitingScreen, (706, 471))  # Draw waiting image in center of screen
-        mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
-        pygame.display.update()  # Update the display
-        clock.tick(15)  # Tick pygame's clock to keep 60FPS (TODO: Replace this jittery garbage)
+            backgroundRect = pygame.rect.Rect(0, 0, 1920, 1080)
+            pygame.draw.rect(window, (0, 100, 100), backgroundRect)
+            window.blit(waitingScreen, (706, 471))  # Draw waiting image in center of screen
+            mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
+            pygame.display.update()  # Update the display
+            clock.tick(30)
+        
+    waitForStart()
     
     # Main game loop
     while shouldRun:
@@ -145,27 +148,18 @@ def initialize(username, ClientConnection):
                 pygame.quit()
                 return
             
-            if event.type == MOUSEBUTTONDOWN:
-                
+            if event.type == MOUSEBUTTONDOWN and player.alive:
                 click = getMouseScaled()
                 
-                if winscreen.restartBox.collidepoint(click):
-                    # do something
+                if winscreen.restartBox.collidepoint(click) or losescreen.restartBox.collidepoint(click):
+                    gameStarted = False
+                    waitForStart()
+                    player.alive = True
+                elif winscreen.quitBox.collidepoint(click) or losescreen.quitBox.collidepoint(click):
                     shouldRun = False
                     return
-                if winscreen.quitBox.collidepoint(click):
-                    # do something
-                    shouldRun = False
-                    return
-                if losescreen.restartBox.collidepoint(click):
-                    # do something
-                    shouldRun = False
-                    return
-                if losescreen.quitBox.collidepoint(click):
-                    # do something
-                    shouldRun = False
-                    return
-        # checks for key presses    
+                    
+        # Checks for key presses    
         keys = pygame.key.get_pressed()
         if keys[K_ESCAPE]:
             pygame.quit()

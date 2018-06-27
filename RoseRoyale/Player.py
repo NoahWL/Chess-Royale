@@ -61,6 +61,9 @@ class Player:
         pygame.draw.rect(self.win, (0, 255, 0), self.healthBarGreen)
     
     def move(self, dx, dy, direction):
+        if not self.alive:
+            return
+        
         self.onGround = False
         
         # Process movement and collisions in x-axis
@@ -115,7 +118,7 @@ class Player:
         # Send positional data to the server if the player has moved more than four pixels (saves bandwidth)
         totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
-        if abs(totalMovement - totalMovementServer) > 4 and RoseRoyale.ClientConnection.theClientConnection != None:
+        if abs(totalMovement - totalMovementServer) > 1 and RoseRoyale.ClientConnection.theClientConnection != None:
             RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY, direction, self.weaponName)  # Send new player position to the server
             self.serverPosX = self.posX
             self.serverPosY = self.posY
