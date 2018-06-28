@@ -40,7 +40,7 @@ class ClientConnection:
         self.connectionManager.sendMessage(message)
         
     def handleMessage(self, message):
-        print('handling:', message)
+        # print('handling:', message)
         messageType = message[message.find('!type') + 5 : message.find('!/type')]  # Get message messageType
         
         if messageType == 'PLAYERPOSITION':
@@ -77,6 +77,10 @@ class ClientConnection:
         elif messageType == 'STARTGAME':
             rg.startGame()
             
+        elif messageType == 'DAMAGE':
+            amount = message[message.find('!amount') + 7 : message.find('!/amount')]
+            rg.DamagePlayer(int(amount))
+            
     def close(self):
         print('Disconnecting from server')
         self.shouldRun = False
@@ -98,8 +102,14 @@ class ClientConnection:
         message = '!typePLAYERPOSITION!/type !name' + self.username + '!/name !posX' + str(x) + '!/posX !posY' + str(y) + '!/posY !direction' + direction + '!/direction !weapon' + weaponName + '!/weapon !end'
         # print(message)
         self._sendMessage(message)
-
         
+    def sendDamage(self, playerHit, amount):
+        playerHit = str(playerHit)
+        amount = str(amount)
+        message = '!typeDAMAGE!/type !playerHit' + playerHit + '!/playerHit !amount' + amount + '!/amount !end'
+        self._sendMessage(message)
+
+
 class ConnectionManager:
 
     def __init__(self, connection, name):
@@ -136,11 +146,11 @@ class ServerListener(Thread):
     def run(self):
         while self.manager.shouldRun:
             buffer = ''
-            received = self.connection.recv(1024)
+            received = self.connection.recv(256)
             buffer += received.decode('utf-8')
             if buffer != '':
                 self.receivedMessages.append(buffer[0 : buffer.find("!end")])
-            time.sleep(0)
+            time.sleep(0.001)
     
     def getMessages(self):
         messages = self.receivedMessages.copy()

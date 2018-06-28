@@ -28,9 +28,6 @@ class WinScreen:
         self.win.blit(self.winScreen, (675, 350))
         self.win.blit(self.buttonMain, (500, 800))
         self.win.blit(self.buttonQuit, (1150, 800)) 
-        
-    def checkClick(self, win):
-        pass
 
 
 class LoseScreen:

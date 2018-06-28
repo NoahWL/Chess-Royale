@@ -42,19 +42,25 @@ resolutionY = GetSystemMetrics(1)
 bullets = []  # List of bullets
 players = []  # List of players (including local)
 terrain = None  # Terrain class, contains list of terrain objects and players
+player = None  # Local player controlled by this client
 
 # Misc variables
 gameStarted = False  # True if the server has started the game
+gameEnded = False  # True if the player has won or died.  Used to allow clicking on endscreen buttons.
+clientConnection = None  # ClientConnection to server for this client
 
 
 # Check if an end screen should be drawn
 def drawEndScreen(player):
+    global gameStarted
     # Lose screen
-        if not player.alive:
-            losescreen.draw()
+    if not player.alive:
+        losescreen.draw()
+        gameEnded = True
     # Win screen
-        elif len(players) == 1 and gameStarted:
-            winscreen.draw()
+    elif len(players) == 1 and gameStarted:
+        winscreen.draw()
+        gameEnded = True
 
 
 def initialize(username, ClientConnection):
@@ -65,8 +71,12 @@ def initialize(username, ClientConnection):
     global winscreen
     global losescreen
     global gameStarted
+    global gameEnded
+    global player
+    global clientConnection
     
     shouldRun = True
+    clientConnection = ClientConnection
     
     # Pygame related setup
     pygame.display.init()
@@ -75,7 +85,7 @@ def initialize(username, ClientConnection):
     mainWin = pygame.display.set_mode((1920, 1080), pygame.NOFRAME, 16)
     window = mainWin.copy()
     terrain = Terrain(window, players)
-    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.FULLSCREEN, 16)
+    mainWin = pygame.display.set_mode((resolutionX, resolutionY), pygame.NOFRAME, 16)
     # mainWin = pygame.display.set_mode((resolutionX, resolutionY), 16)
     
     pygame.display.set_caption('Rose Royale')
@@ -148,14 +158,16 @@ def initialize(username, ClientConnection):
                 pygame.quit()
                 return
             
-            if event.type == MOUSEBUTTONDOWN and player.alive:
+            if event.type == MOUSEBUTTONDOWN and gameEnded:
                 click = getMouseScaled()
                 
                 if winscreen.restartBox.collidepoint(click) or losescreen.restartBox.collidepoint(click):
                     gameStarted = False
+                    gameEnded = False
                     waitForStart()
+                    player.health = 100
                     player.alive = True
-                elif winscreen.quitBox.collidepoint(click) or losescreen.quitBox.collidepoint(click):
+                if winscreen.quitBox.collidepoint(click) or losescreen.quitBox.collidepoint(click):
                     shouldRun = False
                     return
                     
@@ -257,13 +269,14 @@ def startGame():
 
 
 def updateMPPlayer(name, x, y, direction, weaponName):
+    global clientConnection
+    
     mpplayer = None
     for p in players:
         if p.name == name:
             mpplayer = p
     if mpplayer == None:
-        global window
-        mpplayer = MPPlayer(name, x, y, window, terrain, weaponName)
+        mpplayer = MPPlayer(name, x, y, window, terrain, weaponName, clientConnection)
         players.append(mpplayer)
     else:
         mpplayer.posX = x
@@ -272,7 +285,7 @@ def updateMPPlayer(name, x, y, direction, weaponName):
         if mpplayer.weaponName != weaponName:
             mpplayer.setWeapon(weaponName)
 
-        
+
 def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
     bullet = None
      
@@ -288,6 +301,11 @@ def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
         bullets.append(ShotgunBullet(window, terrain, bulletX, bulletY, 2, bulletDirection, owner))
          
     bullets.append(bullet)
+
+    
+def DamagePlayer(amount):
+    global player
+    player.hit(amount)
 
 
 def getMouseScaled():

@@ -7,6 +7,7 @@ from RoseRoyale.Terrain import Terrain
 from RoseRoyale.EndScreen import WinScreen, LoseScreen
 import RoseRoyale.ClientConnection
 
+
 def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -17,9 +18,10 @@ def resource_path(relative_path):  # Get correct path for images when packaged i
 
     return os.path.join(base_path, relative_path)
 
+
 class Player:
     
-    def __init__(self, name, posX, posY, weapon, window, terrain):        
+    def __init__(self, name, posX, posY, weapon, window, terrain):
         self.win = window
         self.name = name
         self.terrain = terrain

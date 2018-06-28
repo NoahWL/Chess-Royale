@@ -18,8 +18,9 @@ def resource_path(relative_path):  # Get correct path for images when packaged i
 
 class MPPlayer:
 
-    def __init__(self, name, posX, posY, window, terrain, weaponName):
+    def __init__(self, name, posX, posY, window, terrain, weaponName, clientConnection):
         self.name = name
+        self.clientConnection = clientConnection
         self.direction = True
         self.terrain = terrain
         self.terrainList = terrain.terrain
@@ -82,3 +83,4 @@ class MPPlayer:
         if self.health <= 0:
             self.health = 0
             self.die()
+        self.clientConnection.sendDamage(self.name, damage)
