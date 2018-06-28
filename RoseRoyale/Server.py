@@ -39,13 +39,8 @@ class Server:
         elif messageType == 'SPAWNBULLET':
             self.sendToAll(message, client.name)  # Pass on bullet to all clients
         elif messageType == 'DAMAGE':
-            playerHit = message[message.find('!playerHit') + 10 : message.find('!/playerHit')]
-            clientHit = self.getClientFromName(playerHit)
-            if clientHit == None:
-                print('No client found under hit name!')
-                return
-            
-            client.sendMessage(message)
+            print('received damage from', client.name, '... sending to rest of clients...')
+            self.sendToAll(message, client.name)
             
     def getClientFromName(self, name):
         for client in self.clients:

@@ -77,10 +77,13 @@ class MPPlayer:
     def die(self):
         self.alive = False
         
-    def hit(self, damage):
+    def hit(self, damage, sendToServer):
         self.health -= damage
         
         if self.health <= 0:
-            self.health = 0
+            print('you killed', self.name)
             self.die()
-        self.clientConnection.sendDamage(self.name, damage)
+        
+        if sendToServer:
+            print('Sending damage to', self.name)
+            self.clientConnection.sendDamage(self.name, damage)

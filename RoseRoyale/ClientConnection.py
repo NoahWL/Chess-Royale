@@ -18,6 +18,8 @@ class ClientConnection:
         print("Client connection starting...")
         
     def connect(self, IP):
+        if IP == '' or IP == None:
+            IP = '127.0.0.1'
         connection = socket.socket()
         try:
             connection.connect((IP, 2396))
@@ -78,8 +80,11 @@ class ClientConnection:
             rg.startGame()
             
         elif messageType == 'DAMAGE':
+            print('received damage:', message)
+            playerHit = message[message.find('!playerHit') + 10 : message.find('!/playerHit')]
             amount = message[message.find('!amount') + 7 : message.find('!/amount')]
-            rg.DamagePlayer(int(amount))
+            amount = int(amount)
+            rg.DamagePlayer(playerHit, amount)
             
     def close(self):
         print('Disconnecting from server')
@@ -107,6 +112,7 @@ class ClientConnection:
         playerHit = str(playerHit)
         amount = str(amount)
         message = '!typeDAMAGE!/type !playerHit' + playerHit + '!/playerHit !amount' + amount + '!/amount !end'
+        print('sending damage:', message)
         self._sendMessage(message)
 
 

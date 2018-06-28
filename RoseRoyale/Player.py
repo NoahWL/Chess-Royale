@@ -117,10 +117,10 @@ class Player:
         # Draw the player's weapon
         self.weapon.draw(self.posX, self.posY, direction)
         
-        # Send positional data to the server if the player has moved more than four pixels (saves bandwidth)
+        # Send positional data to the server if the player has moved
         totalMovement = self.posX + self.posY
         totalMovementServer = self.serverPosX + self.serverPosY
-        if abs(totalMovement - totalMovementServer) > 1 and RoseRoyale.ClientConnection.theClientConnection != None:
+        if abs(totalMovement - totalMovementServer) >= 1 and RoseRoyale.ClientConnection.theClientConnection != None:
             RoseRoyale.ClientConnection.theClientConnection.sendPlayerPos(self.posX, self.posY, direction, self.weaponName)  # Send new player position to the server
             self.serverPosX = self.posX
             self.serverPosY = self.posY
@@ -151,10 +151,10 @@ class Player:
     def die(self):
         self.alive = False
         
-    def hit(self, damage):
+    def hit(self, damage, sendToServer):
         self.health -= damage
         
         if self.health <= 0:
-            self.health = 0
+            print('killing local player')
             self.die()
             

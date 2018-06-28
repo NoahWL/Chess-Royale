@@ -1,14 +1,19 @@
 import os
 import sys
-
 import pygame
 import math as m
+
+clientName = ''
+
+
+def setClientName(name):
+    global clientName
+    clientName = name
 
 
 def resource_path(relative_path):  # Get correct path for images when packaged into an executable file.
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS  # @UndefinedVariable
     except Exception:
         base_path = os.path.abspath(".")
@@ -17,13 +22,15 @@ def resource_path(relative_path):  # Get correct path for images when packaged i
 
 
 def checkPlayerCollision(bullet, players):
+    global clientName
     hitbox = bullet.hitbox
-    owner = bullet.owner
+    ownerName = bullet.owner
     damage = bullet.damage
     
     for player in players:
-        if hitbox.colliderect(player.hitbox) and owner != player.name:
-            player.hit(damage)
+        if hitbox.colliderect(player.hitbox) and player.name != ownerName:
+            if ownerName == clientName:
+                player.hit(damage, True)
             return True
     return False
 
@@ -55,7 +62,7 @@ class PistolBullet:
         self.posY = posY
         self.bulletR = pygame.image.load(resource_path('assets/bullet.png')).convert_alpha()
         self.bulletL = pygame.transform.flip(self.bulletR, True, False)
-        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)  # The numbers added make sure the hitbox is in the right position
+        self.hitbox = pygame.Rect(self.posX + 15, self.posY + 6, 32, 10)  # The numbers added to make sure the hitbox is in the right position
         
     def drawBullet(self):
         
@@ -120,7 +127,7 @@ class ShotgunBullet:
         
         self.speedX = 10
         self.speedY = 2
-        self.damage = 33
+        self.damage = 34
         self.pyState = pyState  # Stands for position Y state. Based on the number incremented in the for loop to make these 3 bullets.
         
         self.posX = posX

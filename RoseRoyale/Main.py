@@ -15,7 +15,7 @@ from RoseRoyale.ServerGUI import ServerGUI
 myServer = None
 serverGUI = None
 cc = None
-username = str(random.randint(1, 100))  # Temp - assign a random username
+username = str(random.randint(1, 1000))  # Temp - assign a random username
 
 
 def Main(runServer, IP):  # Main function, starts the entire game

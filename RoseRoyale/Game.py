@@ -11,6 +11,7 @@ from RoseRoyale.MPPlayer import MPPlayer
 from RoseRoyale.Bullet import PistolBullet, RPGBullet, ShotgunBullet, SMGBullet
 from RoseRoyale.Terrain import Terrain
 from RoseRoyale.EndScreen import WinScreen, LoseScreen
+from RoseRoyale import Bullet
 
 from pygame.constants import K_a, K_d, K_SPACE, K_t, K_ESCAPE, K_RALT, \
     MOUSEBUTTONDOWN
@@ -51,16 +52,20 @@ clientConnection = None  # ClientConnection to server for this client
 
 
 # Check if an end screen should be drawn
-def drawEndScreen(player):
-    global gameStarted
-    # Lose screen
-    if not player.alive:
+def drawEndScreen(player, username):
+    global gameEnded
+    
+    if not player.alive:  # Draw lose screen if player is dead
+        gameEnded = True
         losescreen.draw()
+    else:
+        for p in players:
+            if p.alive and p.name != username:
+                gameEnded = False
+                return
+    
         gameEnded = True
-    # Win screen
-    elif len(players) == 1 and gameStarted:
         winscreen.draw()
-        gameEnded = True
 
 
 def initialize(username, ClientConnection):
@@ -109,6 +114,9 @@ def initialize(username, ClientConnection):
     lastShot = 0
     rpgTime = 2  # RPG fire rate
     
+    # Misc. setup
+    Bullet.setClientName(username)  # Give bullet class this client's username (for collision checking)
+    
     def waitForStart():
         # Wait for the server owner to start the game
         while not gameStarted:
@@ -133,6 +141,8 @@ def initialize(username, ClientConnection):
             pygame.display.update()  # Update the display
             clock.tick(30)
         
+        player.move(2, 2, True)
+            
     waitForStart()
     
     # Main game loop
@@ -161,13 +171,17 @@ def initialize(username, ClientConnection):
             if event.type == MOUSEBUTTONDOWN and gameEnded:
                 click = getMouseScaled()
                 
-                if winscreen.restartBox.collidepoint(click) or losescreen.restartBox.collidepoint(click):
+                if winscreen.restartBox.collidepoint(click) or losescreen.restartBox.collidepoint(click):  # Restart
                     gameStarted = False
                     gameEnded = False
+                    
+                    for p in players:
+                        p.health = 100
+                        p.alive = True
+                    
                     waitForStart()
-                    player.health = 100
-                    player.alive = True
-                if winscreen.quitBox.collidepoint(click) or losescreen.quitBox.collidepoint(click):
+                    break
+                if winscreen.quitBox.collidepoint(click) or losescreen.quitBox.collidepoint(click):  # Quit
                     shouldRun = False
                     return
                     
@@ -233,7 +247,9 @@ def initialize(username, ClientConnection):
         # 2 - Draw players
         for p in players:
             if not p.alive:
-                players.remove(p)
+                p.posX = 0
+                p.posY = 2000
+                continue
             
             if p.isLocal:
                 p.move(posx, posy, direction)
@@ -249,8 +265,7 @@ def initialize(username, ClientConnection):
         terrain.drawAfter()
         
         # 5 - Draw an end screen if required
-        drawEndScreen(player)
-        
+        drawEndScreen(player, username)
         mainWin.blit(pygame.transform.scale(window, (resolutionX, resolutionY)), (0, 0))  # Blit "window" to "mainWin," scaling it to the user's resolution
         pygame.display.update()  # Update the display
         clock.tick(60)  # Tick pygame's clock to keep 60FPS (TODO: Replace this garbage)
@@ -302,10 +317,12 @@ def spawnBullet(bulletX, bulletY, bulletType, bulletDirection, owner):
          
     bullets.append(bullet)
 
-    
-def DamagePlayer(amount):
-    global player
-    player.hit(amount)
+
+def DamagePlayer(playerHit, amount):
+    print('Damaging', playerHit, amount)
+    for p in players:
+        if p.name == playerHit:
+            p.hit(amount, False)
 
 
 def getMouseScaled():
